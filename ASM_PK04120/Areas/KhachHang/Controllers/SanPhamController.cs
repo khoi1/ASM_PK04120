@@ -6,6 +6,7 @@ namespace ASM_PK04120.Areas.KhachHang.Controllers
     [Area("KhachHang")]
     public class SanPhamController : Controller
     {
+
         private readonly ISanPhamService _sanPhamService;
         public SanPhamController(ISanPhamService sanPhamService)
         {
@@ -29,14 +30,11 @@ namespace ASM_PK04120.Areas.KhachHang.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> TimKiem(string tuKhoa)
+        public async Task<JsonResult> TimKiemSanPham(string tuKhoa)
         {
-            var ketQua = await _sanPhamService.TimKiemSanPhamAsync(tuKhoa);
-
-            // Dùng ViewBag để truyền từ khóa tìm kiếm sang View
-            ViewBag.TuKhoa = tuKhoa;
-
-            return View("KetQuaTimKiem", ketQua);
+            // Gọi phương thức TimKiemSanPhamAsync đã được sửa đổi
+            var result = await _sanPhamService.TimKiemSanPhamAsync(tuKhoa);
+            return Json(result);
         }
     }
 }

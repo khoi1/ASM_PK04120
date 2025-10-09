@@ -9560,3 +9560,90 @@ textarea.form-control {
         font-weight: 700; /* In đậm để gây chú ý */
         font-style: normal;
     }
+
+/* Container cho ô tìm kiếm, giữ nguyên để định vị */
+.search-container {
+    position: relative;
+    width: 300px;
+}
+
+/* Dropdown chứa kết quả */
+.search-results-dropdown {
+    display: none;
+    position: absolute;
+    width: 100%;
+    top: 100%;
+    left: 0;
+    /* --- THAY ĐỔI THEO THEME --- */
+    background-color: #120f0f; /* Sử dụng màu nền tối của theme */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Viền mờ giống navbar */
+    border-top: none; /* Bỏ viền trên để liền mạch với ô search */
+    border-radius: 0; /* Bỏ bo góc để giống các dropdown khác */
+    box-shadow: 0px 10px 34px -20px rgba(0, 0, 0, 0.41); /* Dùng box-shadow của theme */
+    z-index: 1000;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+    /* Item trong dropdown */
+    .search-results-dropdown .dropdown-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 15px; /* Tăng padding cho thoáng */
+        text-decoration: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08); /* Viền ngăn cách mờ */
+        transition: background-color 0.3s ease;
+    }
+
+        /* --- HIỆU ỨNG HOVER THEO THEME --- */
+        .search-results-dropdown .dropdown-item:hover {
+            background-color: rgba(196, 155, 99, 0.1); /* Nền màu vàng-nâu mờ khi hover */
+        }
+
+        /* Bỏ viền cho item cuối cùng */
+        .search-results-dropdown .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+/* Hình ảnh sản phẩm */
+.search-item-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px; /* Giữ bo góc nhẹ cho ảnh */
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.search-item-info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Tên sản phẩm */
+.search-item-name {
+    font-size: 14px;
+    margin-bottom: 4px;
+    /* --- MÀU SẮC & FONT THEO THEME --- */
+    color: rgba(255, 255, 255, 0.9);
+    font-family: "Josefin Sans", Arial, sans-serif; /* Dùng font cho heading */
+    transition: color 0.3s ease;
+    /* Giữ nguyên phần cắt chữ dài */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Giá sản phẩm */
+.search-item-price {
+    font-size: 14px;
+    font-weight: 600;
+    /* --- MÀU SẮC THEO THEME --- */
+    color: #c49b63; /* Sử dụng màu vàng-nâu chủ đạo */
+}
+
+/* Thay đổi màu chữ khi hover vào item */
+.search-results-dropdown .dropdown-item:hover .search-item-name {
+    color: #fff;
+}

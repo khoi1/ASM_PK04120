@@ -16,16 +16,21 @@
             <ul class="navbar-nav ml-auto align-items-center">
                 <li class="nav-item @(ControllerHienTai == "TrangChu" ? "active" : "")"><a asp-area="KhachHang" asp-controller="TrangChu" asp-action="Index" class="nav-link">Trang chủ</a></li>
                 <li class="nav-item @(ControllerHienTai == "SanPham" ? "active" : "")"><a asp-area="KhachHang" asp-controller="SanPham" asp-action="SanPham" class="nav-link">Sản phẩm</a></li>
-                
-				<li class="nav-item">
-                    <form asp-area="KhachHang" asp-controller="SanPham" asp-action="TimKiem" method="get" class="search-form ml-lg-3">
-                        <div class="input-group">
-                            <input type="text" name="tuKhoa" class="form-control" placeholder="Tìm kiếm sản phẩm...">
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-primary" style="border: none;"><span class="icon-search"></span></button>
+
+                <li class="nav-item">
+                    <div class="search-container">
+                        <form asp-area="KhachHang" asp-controller="SanPham" asp-action="TimKiemSanPham" method="get" class="search-form ml-lg-3" autocomplete="off">
+                            <div class="input-group">
+                                <input type="text" name="query" class="form-control" id="searchInput" placeholder="Tìm kiếm sản phẩm...">
+
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary" style="border: none;"><span class="icon-search"></span></button>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+
+                        <div id="searchResults" class="search-results-dropdown"></div>
+                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link position-relative" asp-area="KhachHang" asp-controller="GioHang" asp-action="Index">
@@ -70,3 +75,62 @@
         </div>
     </div>
 </nav>
+
+<script>
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+
+    // Định dạng số thành tiền tệ Việt Nam
+    const currencyFormatter = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+    });
+
+    searchInput.addEventListener('keyup', function() {
+        const tuKhoa = this.value;
+
+        if (tuKhoa.length < 2) { // Chỉ tìm kiếm khi có ít nhất 2 ký tự
+            searchResults.innerHTML = '';
+            searchResults.style.display = 'none';
+            return;
+        }
+
+        // Chú ý: URL tới Controller của bạn
+        fetch(`/KhachHang/SanPham/TimKiemSanPham?tuKhoa=${tuKhoa}`)
+            .then(response => response.json())
+            .then(data => {
+                searchResults.innerHTML = ''; // Xóa kết quả cũ
+
+                if (data.length > 0) {
+                    data.forEach(product => {
+                        // --- PHẦN THAY ĐỔI LỚN NẰM Ở ĐÂY ---
+                        // Tạo một thẻ 'a' bao bọc toàn bộ item
+                        const link = document.createElement('a');
+                        link.href = `/KhachHang/SanPham/ChiTietSanPham/${product.maSanPham}`; // Sửa lại đúng với tên property
+                        link.classList.add('dropdown-item');
+
+                        // Tạo HTML cho nội dung bên trong, bao gồm hình ảnh, tên và giá
+                        link.innerHTML = `
+                            <img src="/KhachHang/images/AnhSP/${product.hinhAnh}" alt="${product.tenSanPham}" class="search-item-img">
+                            <div class="search-item-info">
+                                <span class="search-item-name">${product.tenSanPham}</span>
+                                <span class="search-item-price">${currencyFormatter.format(product.giaBan)}</span>
+                            </div>
+                        `;
+
+                        searchResults.appendChild(link);
+                    });
+                    searchResults.style.display = 'block';
+                } else {
+                    searchResults.style.display = 'none';
+                }
+            })
+            .catch(error => console.error('Lỗi khi tìm kiếm:', error));
+    });
+
+    document.addEventListener('click', function(event) {
+        if (!searchInput.contains(event.target)) {
+            searchResults.style.display = 'none';
+        }
+    });
+</script>

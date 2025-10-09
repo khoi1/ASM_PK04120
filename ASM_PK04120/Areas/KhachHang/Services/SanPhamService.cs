@@ -172,26 +172,36 @@ namespace ASM_PK04120.Areas.KhachHang.Services
 
         }
 
-        public async Task<List<SanPhamModel>> TimKiemSanPhamAsync(string tuKhoa)
+        public async Task<List<SanPhamTimKiemViewModel>> TimKiemSanPhamAsync(string tuKhoa)
         {
             try
             {
+                // Kiểm tra từ khóa rỗng
                 if (string.IsNullOrWhiteSpace(tuKhoa))
                 {
-                    return new List<SanPhamModel>(); // Trả về danh sách rỗng nếu không có từ khóa
+                    return new List<SanPhamTimKiemViewModel>();
                 }
 
                 // Tìm kiếm không phân biệt chữ hoa/thường
                 var tuKhoaLower = tuKhoa.ToLower();
 
+                // 2. Truy vấn, định dạng lại dữ liệu và giới hạn số lượng kết quả
                 return await _context.SanPhams
                     .Where(p => p.TenSanPham.ToLower().Contains(tuKhoaLower))
+                    .Select(p => new SanPhamTimKiemViewModel // Sử dụng ViewModel
+                    {
+                        MaSanPham = p.MaSanPham,
+                        TenSanPham = p.TenSanPham,
+                        HinhAnh = p.HinhAnh,
+                        GiaBan = p.GiaBan
+                    })
+                    .Take(5) // Giới hạn 10 kết quả
                     .ToListAsync();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
-                return new List<SanPhamModel>();
+                return new List<SanPhamTimKiemViewModel>();
             }
         }
     }

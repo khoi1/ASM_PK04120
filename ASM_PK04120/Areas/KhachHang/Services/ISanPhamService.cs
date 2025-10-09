@@ -8,6 +8,6 @@ namespace ASM_PK04120.Areas.KhachHang.Services
         Task<List<SanPhamBanChayViewModel>> LaySanPhamBanChayAsync(int soLuong);
         Task<ChiTietSanPhamViewModel?> LayChiTietSanPhamAsync(int maSanPham);
         Task<SanPhamViewModel> LayDanhSachSanPhamAsync(int? maDanhMuc, string? phamViGia, string? thuTuSapXep, int soTrang);
-        Task<List<SanPhamModel>> TimKiemSanPhamAsync(string tuKhoa);
+        Task<List<SanPhamTimKiemViewModel>> TimKiemSanPhamAsync(string tuKhoa);
     }
 }
