@@ -1,0 +1,118 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model ASM_PK04120.Areas.KhachHang.Models.SanPhamViewModel
+@{
+    Layout = "~/Areas/KhachHang/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Trang sản phẩm";
+}
+
+
+<section class="ftco-menu mb-5 pb-5">
+    <div class="container">
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-7 heading-section text-center ftco-animate">
+                <span class="subheading">Khám Phá</span>
+                <br>
+                <h2 class="mb-4">Sản Phẩm Của Chúng Tôi</h2>
+                <p>Ở một nơi rất xa, đằng sau những ngọn núi chữ, xa khỏi các quốc gia Vokalia và Consonantia, có những văn bản vô nghĩa sinh sống.</p>
+            </div>
+        </div>
+        <div class="row d-md-flex">
+            <div class="col-lg-12 ftco-animate p-md-5">
+                <div class="row">
+                    <div class="col-md-3">
+                        @if (Model.MaDanhMucHienTai.HasValue)
+                        {
+                            <input type="hidden" name="maDanhMuc" value="@Model.MaDanhMucHienTai" />
+                        }
+                        <div class="sidebar-box">
+                            <h3 class="sidebar-heading">Lọc Theo Giá</h3>
+                            <form method="get" asp-action="SanPham" class="price-filter-form">
+                                <div class="form-group">
+                                    <div class="select-wrap">
+                                        <div class="icon"><span class="ion-ios-arrow-down"></span></div>
+                                        <select onchange="this.form.submit()" class="form-control" id="price-select" name="phamViGia">
+                                            <option value="all" selected="@(Model.PhamViGiaHienTai == "all")">Tất cả mức giá</option>
+                                            <option value="0-100000" selected="@(Model.PhamViGiaHienTai == "0-100000")">Dưới 100,000 VNĐ</option>
+                                            <option value="100000-200000" selected="@(Model.PhamViGiaHienTai == "100000-200000")">100,000 - 200,000 VNĐ</option>
+                                            <option value="200000-300000" selected="@(Model.PhamViGiaHienTai == "200000-300000")">200,000 - 300,000 VNĐ</option>
+                                            <option value="300000-9999999" selected="@(Model.PhamViGiaHienTai == "300000-9999999")">Trên 300,000 VNĐ</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="sidebar-box">
+                            <h3 class="sidebar-heading">Sắp Xếp</h3>
+                            <form method="get" asp-action="SanPham" class="sorting-form">
+                                <div class="form-check">
+                                    <input class="form-check-input" onchange="this.form.submit()" type="radio" name="thuTuSapXep" id="sortNewest" value="newest" checked="@(Model.SapXepHienTai == "newest")">
+                                    <label class="form-check-label" for="sortNewest">
+                                        Mới nhất
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" onchange="this.form.submit()" type="radio" name="thuTuSapXep" id="sortPriceAsc" value="priceAsc" checked="@(Model.SapXepHienTai == "priceAsc")">
+                                    <label class="form-check-label" for="sortPriceAsc">
+                                        Giá: Thấp đến Cao
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" onchange="this.form.submit()" type="radio" name="thuTuSapXep" id="sortPriceDesc" value="priceDesc" checked="@(Model.SapXepHienTai == "priceDesc")">
+                                    <label class="form-check-label" for="sortPriceDesc">
+                                        Giá: Cao đến Thấp
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-md-9 nav-link-wrap mb-5">
+                        <div class="nav ftco-animate nav-pills justify-content-center" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                            <a class="nav-link @(Model.MaDanhMucHienTai == null ? "active" : "")" asp-action="SanPham" asp-route-phamViGia="@Model.PhamViGiaHienTai" asp-route-thuTuSapXep="@Model.SapXepHienTai">Tất cả</a>
+                            @foreach (var danhMuc in Model.DanhSachDanhMuc)
+                            {
+                                <a class="nav-link @(Model.MaDanhMucHienTai == danhMuc.MaDanhMuc ? "active" : "")" asp-action="SanPham" asp-route-maDanhMuc="@danhMuc.MaDanhMuc" asp-route-phamViGia="@Model.PhamViGiaHienTai" asp-route-thuTuSapXep="@Model.SapXepHienTai">@danhMuc.TenDanhMuc</a>
+                            }
+                        </div>
+                        <div class="tab-content ftco-animate" id="v-pills-tabContent">
+
+                            <div class="tab-pane fade show active" id="v-pills-1" role="tabpanel" aria-labelledby="v-pills-1-tab">
+                                <div class="row" style="margin-top: 20px;">
+                                    @foreach (var sanPham in Model.DanhSachSanPham)
+                                    {
+                                        <a class="col-md-4" style="margin-bottom:30px;" asp-action="ChiTietSanPham" asp-route-id="@sanPham.MaSanPham">
+                                            <div class="menu-entry">
+                                                <img src="~/KhachHang/images/AnhSP/@sanPham.HinhAnh" class="img" alt="@sanPham.TenSanPham" />
+                                                <div class="text text-center pt-4">
+                                                    <h3>@sanPham.TenSanPham</h3>
+                                                    <p class="price">@sanPham.GiaBan.ToString("N0") VNĐ</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    }
+                                    
+                                </div>
+                            </div>
+                            <div class="row mt-5">
+                                <div class="col text-center">
+                                    <div class="block-27">
+                                        <ul>
+                                            @for (int i = 1; i <= Model.TongSoTrang; i++)
+                                            {
+                                                <li class="@(i == Model.TrangHienTai ? "active" : "")">
+                                                    <a asp-action="SanPham" asp-route-maDanhMuc="@Model.MaDanhMucHienTai" asp-route-phamViGia="@Model.PhamViGiaHienTai" asp-route-thuTuSapXep="@Model.SapXepHienTai" asp-route-trang="@i">@i</a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

@@ -1,0 +1,158 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Thống kê";
+}
+<div id="content-wrapper">
+    <div class="container-fluid">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="index.html">Trang chủ</a>
+            </li>
+            <li class="breadcrumb-item active">Thống kê chi tiết</li>
+        </ol>
+
+        <div class="row mb-4">
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card stat-card blue h-100">
+                    <div class="card-body">
+                        <div class="stat-label">Doanh thu tháng này</div>
+                        <div class="stat-value">125.5M</div>
+                        <small class="text-success"><i class="fa fa-arrow-up"></i> 12.5% so với tháng trước</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card stat-card green h-100">
+                    <div class="card-body">
+                        <div class="stat-label">Đơn hàng tháng này</div>
+                        <div class="stat-value">1,245</div>
+                        <small class="text-success"><i class="fa fa-arrow-up"></i> 8.3% so với tháng trước</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card stat-card orange h-100">
+                    <div class="card-body">
+                        <div class="stat-label">Khách hàng mới</div>
+                        <div class="stat-value">342</div>
+                        <small class="text-success"><i class="fa fa-arrow-up"></i> 15.2% so với tháng trước</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-3">
+                <div class="card stat-card purple h-100">
+                    <div class="card-body">
+                        <div class="stat-label">Giá trị TB đơn hàng</div>
+                        <div class="stat-value">100.8K</div>
+                        <small class="text-danger"><i class="fa fa-arrow-down"></i> 3.2% so với tháng trước</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <span><i class="fa fa-line-chart"></i> Tổng Quan Doanh Thu</span>
+                <div class="period-tabs">
+                    <button id="btn-day" class="btn btn-sm btn-light active" onclick="updateOverviewChart('day')">Ngày</button>
+                    <button id="btn-month-overview" class="btn btn-sm btn-light" onclick="updateOverviewChart('month')">Tháng</button>
+                    <button id="btn-year-overview" class="btn btn-sm btn-light" onclick="updateOverviewChart('year')">Năm</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <canvas id="overviewChart" width="100%" height="40"></canvas>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <span><i class="fa fa-star"></i> Top Sản Phẩm Bán Chạy</span>
+                <div class="period-tabs">
+                    <button id="btn-week" class="btn btn-sm btn-light active" onclick="updateTopProducts('week')">Tuần</button>
+                    <button id="btn-month" class="btn btn-sm btn-light" onclick="updateTopProducts('month')">Tháng</button>
+                    <button id="btn-year" class="btn btn-sm btn-light" onclick="updateTopProducts('year')">Năm</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <canvas id="topProductsChart" height="250"></canvas>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover" id="topProductsTable">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Tên sản phẩm</th>
+                                        <th>Số lượng bán</th>
+                                        <th>Doanh thu</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="topProductsTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header bg-warning text-white d-flex justify-content-between align-items-center">
+                <span><i class="fa fa-pie-chart"></i> Thống Kê Theo Danh Mục</span>
+                <div class="period-tabs">
+                    <button id="btn-cat-revenue" class="btn btn-sm btn-light active" onclick="updateCategoryChart('revenue')">Theo Doanh Thu</button>
+                    <button id="btn-cat-quantity" class="btn btn-sm btn-light" onclick="updateCategoryChart('quantity')">Theo Số Lượng</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-7">
+                        <canvas id="categoryPieChart" height="250"></canvas>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Danh mục</th>
+                                        <th id="category-table-header-value">Doanh thu</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="categoryTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header bg-dark text-white">
+                <i class="fa fa-calendar"></i>
+                Bảng Chi Tiết Doanh Thu Theo Ngày
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="dailyRevenueTable" width="100%" cellspacing="0">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Ngày</th>
+                                <th>Tổng doanh thu</th>
+                                <th>Số đơn hàng</th>
+                                <th>Giá trị TB</th>
+                                <th>Ghi chú</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

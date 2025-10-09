@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+	<title>Cà Phê - Mẫu trang web miễn phí bởi Colorlib</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Josefin+Sans:400,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Great+Vibes" rel="stylesheet">
+	<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-straight/css/uicons-regular-straight.css'>
+
+	<link rel="stylesheet" href="~/KhachHang/css/open-iconic-bootstrap.min.css">
+	<link rel="stylesheet" href="~/KhachHang/css/animate.css">
+
+	<link rel="stylesheet" href="~/KhachHang/css/owl.carousel.min.css">
+	<link rel="stylesheet" href="~/KhachHang/css/owl.theme.default.min.css">
+	<link rel="stylesheet" href="~/KhachHang/css/magnific-popup.css">
+
+	<link rel="stylesheet" href="~/KhachHang/css/aos.css">
+
+	<link rel="stylesheet" href="~/KhachHang/css/ionicons.min.css">
+
+	<link rel="stylesheet" href="~/KhachHang/css/bootstrap-datepicker.css">
+	<link rel="stylesheet" href="~/KhachHang/css/jquery.timepicker.css">
+
+
+	<link rel="stylesheet" href="~/KhachHang/css/flaticon.css">
+	<link rel="stylesheet" href="~/KhachHang/css/icomoon.css">
+	<link rel="stylesheet" href="~/KhachHang/css/style.css">
+	<link rel="stylesheet" href="~/KhachHang/css/ThongBao.css">
+	@RenderSection("Styles", required: false)
+</head>
+
+<body>
+	<!-- Thong Bao -->
+	@await Html.PartialAsync("_ThongBao")
+	<!-- Header -->
+	@await Html.PartialAsync("_Header")
+
+	@RenderBody()
+
+	<!-- Footer -->
+	@await Html.PartialAsync("_Footer")
+
+	<script src="~/KhachHang/js/jquery.min.js"></script>
+	<script src="~/KhachHang/js/jquery-migrate-3.0.1.min.js"></script>
+	<script src="~/KhachHang/js/popper.min.js"></script>
+	<script src="~/KhachHang/js/bootstrap.min.js"></script>
+	<script src="~/KhachHang/js/jquery.easing.1.3.js"></script>
+	<script src="~/KhachHang/js/jquery.waypoints.min.js"></script>
+	<script src="~/KhachHang/js/jquery.stellar.min.js"></script>
+	<script src="~/KhachHang/js/owl.carousel.min.js"></script>
+	<script src="~/KhachHang/js/jquery.magnific-popup.min.js"></script>
+	<script src="~/KhachHang/js/aos.js"></script>
+	<script src="~/KhachHang/js/jquery.animateNumber.min.js"></script>
+	<script src="~/KhachHang/js/bootstrap-datepicker.js"></script>
+	<script src="~/KhachHang/js/jquery.timepicker.min.js"></script>
+	<script src="~/KhachHang/js/scrollax.min.js"></script>
+	<script src="~/KhachHang/js/main.js"></script>
+
+</body>
+
+</html>

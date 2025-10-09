@@ -1,0 +1,94 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model ASM_PK04120.Areas.KhachHang.Models.ChiTietSanPhamViewModel
+@{
+	Layout = "~/Areas/KhachHang/Views/Shared/_Layout.cshtml";
+	ViewData["Title"] = "Trang chi tiết sản phẩm";
+}
+
+<section class="ftco-section" style="padding-bottom:0;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 mb-5 ftco-animate">
+                <a href="~/KhachHang/images/AnhSP/@Model.SanPham.HinhAnh" class="image-popup"><img src="~/KhachHang/images/AnhSP/@Model.SanPham.HinhAnh" class="img-fluid" alt="Ảnh sản phẩm"></a>
+            </div>
+            <div class="col-lg-6 product-details pl-md-5 ftco-animate">
+                <h3>@Model.SanPham.TenSanPham</h3>
+                <p class="price"><span>@Model.SanPham.GiaBan.ToString("N0")</span></p>
+                <p class="stock-quantity">
+                    (Còn lại: @Model.SanPham.SoLuongConLai sản phẩm)
+                </p>
+                <div class="row mt-4">
+                    <div class="w-100"></div>
+                    <div class="input-group col-md-6 d-flex mb-3">
+                        <span class="input-group-btn mr-2">
+                            <button type="button" class="quantity-left-minus btn" data-type="minus" data-field="">
+                                <i class="icon-minus"></i>
+                            </button>
+                        </span>
+                        <input type="text" id="quantity" name="quantity" class="form-control input-number" value="1" min="1" max="100">
+                        <span class="input-group-btn ml-2">
+                            <button type="button" class="quantity-right-plus btn" data-type="plus" data-field="">
+                                <i class="icon-plus"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+                <p><a href="#" class="btn btn-primary py-3 px-5">Thêm vào giỏ hàng</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section" style="padding-top: 50px; padding-bottom: 3em;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 ftco-animate">
+
+                <div class="cart-total">
+                    <h3 class="billing-heading mb-4 text-center"><strong style="color:#c49b63;">Thông Tin Chi Tiết Sản Phẩm</strong></h3>
+
+                    <a href="~/KhachHang/images/AnhMoTa/@Model.SanPham.MoTa" class="image-popup"><img src="~/KhachHang/images/AnhMoTa/@Model.SanPham.MoTa" alt="Ảnh mô tả sản phẩm" /></a>
+                    
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section" style="padding-top:50px;">
+    <div class="container">
+        <div class="row justify-content-center mb-5 pb-3">
+            <div class="col-md-7 heading-section ftco-animate text-center">
+                <span class="subheading">Khám phá</span>
+                <br>
+                <h2 class="mb-4">Sản phẩm tương tự</h2>
+                <p>Từ những vùng trồng trứ danh, chúng tôi cẩn trọng lựa chọn những hạt cà phê chất lượng nhất, mang đến hương vị đậm đà, nguyên bản trong từng sản phẩm.</p>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            @if (Model.SanPhamTuongTu != null && Model.SanPhamTuongTu.Any())
+            {
+                @foreach (var sanPham in Model.SanPhamTuongTu)
+                {
+                    <a class="col-md-3" style="margin-bottom:30px;" asp-route-id="@sanPham.MaSanPham" asp-area="KhachHang" asp-controller="SanPham" asp-action="ChiTietSanPham">
+                        <div class="menu-entry">
+                            <img src="~/KhachHang/images/AnhSP/@sanPham.HinhAnh" class="img" alt="Alternate Text" />
+                            <div class="text text-center pt-4">
+                                <h3>@sanPham.TenSanPham</h3>
+                                <p class="price">@sanPham.GiaBan.ToString("N0") VNĐ</p>
+                            </div>
+                        </div>
+                    </a>
+
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center">
+                    <h2>Hiện chưa có sản phẩm tương tự nào.</h2>
+                </div>
+            }
+        </div>
+    </div>
+</section>

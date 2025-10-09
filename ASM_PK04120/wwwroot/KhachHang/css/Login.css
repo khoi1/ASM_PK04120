@@ -1,0 +1,252 @@
+﻿/* =================================================================
+   Tệp CSS Dùng Chung cho các trang Xác thực (Đăng nhập, Đăng ký,...)
+   ================================================================= */
+
+/* --- 1. Cài đặt chung & Reset --- */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* --- 2. Bố cục chính của trang --- */
+.auth-section {
+    position: relative; /* Dùng để định vị cho nút back-to-home */
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
+    background-image: url('../images/bg_1.jpg'); /* Đảm bảo đường dẫn này đúng */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    width: 100%;
+}
+
+.auth-container {
+    width: 100%;
+    padding: 40px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid #c49b63;
+    border-radius: 8px;
+}
+/* Tùy chỉnh chiều rộng cho từng form cụ thể */
+.login-container {
+    max-width: 450px;
+}
+
+.register-container {
+    max-width: 500px;
+}
+
+.forgot-password-container {
+    max-width: 450px;
+}
+
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+    .auth-header h2 {
+        font-size: 32px;
+        color: #fff;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .auth-header .subheading {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 28px;
+        color: #c49b63;
+    }
+
+/* --- 3. Các thành phần của Form --- */
+.form-group {
+    margin-bottom: 25px;
+}
+
+    .form-group label {
+        display: block;
+        color: #fff;
+        margin-bottom: 8px;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 12px 15px;
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        color: #fff;
+        font-size: 15px;
+        transition: all 0.3s ease;
+    }
+
+        .form-group input:focus {
+            outline: none;
+            border-bottom-color: #c49b63;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+/* --- 4. Nút bấm và Liên kết --- */
+.btn-auth {
+    width: 100%;
+    padding: 15px;
+    background: #c49b63;
+    color: #000;
+    border: none;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+    .btn-auth:hover {
+        background: transparent;
+        border: 1px solid #c49b63;
+        color: #c49b63;
+    }
+
+.auth-link {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    margin-top: 30px;
+}
+
+    .auth-link a {
+        color: #c49b63;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+        .auth-link a:hover {
+            text-decoration: underline;
+        }
+
+/* --- 5. Các thành phần phụ --- */
+.remember-forgot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+    /* ... (các style con của remember-forgot giữ nguyên) ... */
+    .remember-forgot label {
+        display: flex;
+        align-items: center;
+        color: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+    }
+
+    .remember-forgot input[type="checkbox"] {
+        margin-right: 8px;
+    }
+
+    .remember-forgot a {
+        color: #c49b63;
+        text-decoration: none;
+    }
+
+        .remember-forgot a:hover {
+            text-decoration: underline;
+        }
+
+.divider {
+    text-align: center;
+    margin: 30px 0;
+    position: relative;
+}
+    /* ... (các style con của divider giữ nguyên) ... */
+    .divider::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 100%;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .divider span {
+        position: relative;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 0 15px;
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+.back-to-home-btn {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+    .back-to-home-btn span {
+        font-size: 20px;
+    }
+
+    .back-to-home-btn:hover {
+        background: #c49b63;
+        color: #000;
+        border-color: #c49b63;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        text-decoration: none; /* <-- Thêm dòng này để xóa gạch chân */
+    }
+
+/* --- 6. Style cho Icon Hiện/Ẩn Mật khẩu --- */
+
+.password-wrapper {
+    position: relative;
+}
+
+    .password-wrapper .password-input {
+        /* Thêm khoảng trống bên phải để icon không đè lên chữ */
+        padding-right: 40px;
+    }
+
+.toggle-password {
+    position: absolute;
+    top: 70%; /* Điều chỉnh để căn giữa theo chiều dọc với input */
+    right: 15px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+    .toggle-password i {
+        font-size: 22px;
+        color: rgba(255, 255, 255, 0.5); /* Màu icon mặc định */
+        transition: color 0.3s ease;
+    }
+
+    .toggle-password:hover i {
+        color: #c49b63; /* Màu icon khi di chuột vào */
+    }

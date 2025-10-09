@@ -1,0 +1,91 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model ASM_PK04120.Areas.KhachHang.Models.DangNhapViewModel
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập - Coffee Shop</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="~/KhachHang/css/ionicons.min.css">
+    <link rel="stylesheet" href="~/KhachHang/css/Login.css">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-straight/css/uicons-regular-straight.css'>
+    <link rel="stylesheet" href="~/KhachHang/css/ThongBao.css" />
+</head>
+
+<body>
+    <section class="auth-section">
+        <a asp-area="KhachHang" asp-controller="TrangChu" asp-action="Index" class="back-to-home-btn">
+            <span>&larr;</span> Quay lại trang chủ
+        </a>
+
+        <div class="auth-container login-container">
+            <div class="auth-header">
+                <p class="subheading">Chào mừng trở lại</p>
+                <h2>Đăng Nhập</h2>
+            </div>
+
+            <form asp-action="DangNhap" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <div class="form-group">
+                    <label asp-for="TaiKhoanOrEmail">Tài khoản hoặc Email</label>
+                    <input asp-for="TaiKhoanOrEmail" type="text" id="email" placeholder="your@email.com" required>
+					<span asp-validation-for="TaiKhoanOrEmail" class="text-danger"></span>
+                </div>
+
+                <div class="form-group password-wrapper">
+                    <label asp-for="MatKhau">Mật khẩu</label>
+                    <input asp-for="MatKhau" type="password" class="password-input" id="password" placeholder="••••••••" required>
+                    <span class="toggle-password"><i class="ion-ios-eye-off"></i></span>
+					<span asp-validation-for="MatKhau" class="text-danger"></span>
+                </div>
+
+                <div class="remember-forgot">
+                    
+                </div>
+
+                <button type="submit" class="btn-auth">Đăng Nhập</button>
+            </form>
+
+            <div class="divider">
+                <span>Hoặc</span>
+            </div>
+
+            <div class="auth-link">
+                Chưa có tài khoản? <a asp-area="KhachHang" asp-action="DangKy">Đăng ký ngay</a>
+            </div>
+        </div>
+    </section>
+    <partial name="_ThongBao" />
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const togglePasswordIcons = document.querySelectorAll('.toggle-password');
+
+            togglePasswordIcons.forEach(icon => {
+                icon.addEventListener('click', function () {
+                    // Lấy thẻ input ngay trước icon
+                    const passwordInput = this.previousElementSibling;
+                    const iconElement = this.querySelector('i');
+
+                    // Lấy kiểu của input (password hoặc text)
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+
+                    // Đổi icon con mắt
+                    if (type === 'text') {
+                        iconElement.classList.remove('ion-ios-eye-off');
+                        iconElement.classList.add('ion-ios-eye');
+                    } else {
+                        iconElement.classList.remove('ion-ios-eye');
+                        iconElement.classList.add('ion-ios-eye-off');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

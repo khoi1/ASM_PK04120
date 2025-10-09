@@ -1,0 +1,57 @@
+﻿/* --- MODERN TOAST NOTIFICATION STYLING - COFFEE THEME --- */
+
+.toast-notification {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    z-index: 9999;
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: white;
+    font-weight: 500;
+    font-size: var(--normal-font-size);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    /* Hiệu ứng trượt vào từ bên phải */
+    transform: translateX(120%);
+    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+    .toast-notification.show {
+        transform: translateX(0);
+    }
+
+    .toast-notification i {
+        font-size: 1.5rem;
+    }
+
+    /* Màu sắc phù hợp với theme cà phê */
+    .toast-notification.success {
+        background: linear-gradient(135deg, #3d2817 0%, #5c3d2e 100%);
+        border-left: 4px solid #8b6f47;
+    }
+
+    .toast-notification.error {
+        background: linear-gradient(135deg, #2d1410 0%, #4a1f1a 100%);
+        border-left: 4px solid #d4574a;
+    }
+
+    .toast-notification.warning {
+        background: linear-gradient(135deg, #3d2f17 0%, #5c4d2e 100%);
+        border-left: 4px solid #d4a74a;
+        color: #fff3cd;
+    }
+
+    .toast-notification.info {
+        background: linear-gradient(135deg, #151111 0%, #2a2222 100%);
+        border-left: 4px solid #8b7355;
+    }
+
+    /* Hiệu ứng hover để có thể đóng bằng cách click */
+    .toast-notification:hover {
+        cursor: pointer;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    }

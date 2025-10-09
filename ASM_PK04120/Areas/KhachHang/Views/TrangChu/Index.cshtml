@@ -1,0 +1,108 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model ASM_PK04120.Areas.KhachHang.Models.TrangChuViewModel
+@{
+	Layout = "~/Areas/KhachHang/Views/Shared/_Layout.cshtml";
+	ViewData["Title"] = "Trang chủ khách hàng";
+}
+
+<section class="home-slider owl-carousel">
+	<div class="slider-item" style="background-image: url('@Url.Content("~/KhachHang/images/bg_1.jpg")');">
+		<div class="overlay"></div>
+		<div class="container">
+			<div class="row slider-text justify-content-center align-items-center" data-scrollax-parent="true">
+
+				<div class="col-md-8 col-sm-12 text-center ftco-animate">
+					<span class="subheading">Chào mừng</span>
+					<h1 class="mb-4">Trải nghiệm cà phê tuyệt vời nhất</h1>
+					<p class="mb-4 mb-md-5">
+						Hành trình mang đến trải nghiệm cà phê tuyệt vời nhất bắt đầu từ đây: từ những hạt cà phê hảo hạng trên vùng đất Buôn Ma Thuột. 
+						Chúng tôi cam kết giữ trọn hương vị nguyên bản và sự thuần khiết trong từng gói cà phê bạn nhận được.
+					</p>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="slider-item" style="background-image: url('@Url.Content("~/KhachHang/images/bg_3.jpg")');">
+		<div class="overlay"></div>
+		<div class="container">
+			<div class="row slider-text justify-content-center align-items-center" data-scrollax-parent="true">
+
+				<div class="col-md-8 col-sm-12 text-center ftco-animate">
+					<span class="subheading">Chào mừng</span>
+					<h1 class="mb-4">Hương Thơm Từ Mẻ Rang Mới</h1>
+					<p class="mb-4 mb-md-5">
+						Mỗi gói cà phê được rang xay và đóng gói tỉ mỉ để giữ trọn vẹn hương thơm nồng nàn đặc trưng. 
+						Hãy để mùi hương nguyên bản ấy đánh thức các giác quan và khơi nguồn năng lượng cho một ngày mới của bạn.
+					</p>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<section class="ftco-about d-md-flex">
+	<div class="one-half img" style="background-image: url('@Url.Content("~/KhachHang/images/about.jpg")');"></div>
+	<div class="one-half ftco-animate">
+		<div class="overlap">
+			<div class="heading-section ftco-animate ">
+				<span class="subheading">Khám phá</span>
+				<br>
+				<h2 class="mb-4">Câu chuyện của chúng tôi</h2>
+			</div>
+			<div>
+				<p>
+					Hành trình của chúng tôi không bắt đầu từ những chiếc bàn, mà từ mẻ rang đầu tiên, 
+					nơi niềm đam mê với hạt cà phê quê hương được thắp lửa. Từ một xưởng rang nhỏ bé, 
+					chúng tôi lớn lên nhờ sự tin yêu của những người trân trọng hương vị cà phê mộc mạc, nguyên bản.
+
+					Chúng tôi tin rằng, mỗi gói cà phê trao tay không chỉ là một sản phẩm, 
+					mà là lời cam kết về sự thuần khiết. Đó là lý do chúng tôi luôn gìn giữ hương vị nguyên bản của hạt cà phê Buôn Ma Thuột, 
+					đồng thời không ngừng sáng tạo trong kỹ thuật rang xay để mang đến trải nghiệm tốt nhất cho khách hàng ngay tại nhà.
+				</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="ftco-section">
+	<div class="container">
+		<div class="row justify-content-center mb-5 pb-3">
+			<div class="col-md-7 heading-section ftco-animate text-center">
+				<span class="subheading">Khám phá</span>
+				<br>
+				<h2 class="mb-4">Sản phẩm cà phê bán chạy nhất</h2>
+				<p>
+					Khám phá những dòng cà phê hạt và bột rang xay hảo hạng, với hương vị đậm đà đặc trưng, là lý do khiến khách hàng luôn tin tưởng và lựa chọn dài lâu.
+				</p>
+			</div>
+		</div>
+		<div class="row justify-content-center">
+			@if (Model.SanPhamBanChay != null && Model.SanPhamBanChay.Any())
+			{
+				@foreach (var sanPham in Model.SanPhamBanChay)
+				{
+					<a class="col-md-3" style="margin-bottom:30px;" asp-route-id="@sanPham.MaSanPham" asp-area="KhachHang" asp-controller="SanPham" asp-action="ChiTietSanPham">
+						<div class="menu-entry">
+							<img src="~/KhachHang/images/AnhSP/@sanPham.HinhAnh" class="img" alt="Alternate Text" />
+							<div class="text text-center pt-4">
+								<h3>@sanPham.TenSanPham</h3>
+								<p class="price">@sanPham.GiaBan.ToString("N0") VNĐ</p>
+							</div>
+						</div>
+					</a>
+					
+				}
+			}
+			else
+			{
+				<div class="col-12 text-center">
+					<h2>Hiện chưa có sản phẩm bán chạy nào trong tháng này.</h2>
+				</div>
+			}
+		</div>
+	</div>
+</section>
