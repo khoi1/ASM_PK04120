@@ -1,0 +1,94 @@
+﻿@{
+    ViewData["Title"] = "Giỏ hàng của bạn";
+    Layout = "~/Areas/KhachHang/Views/Shared/_Layout.cshtml";
+}
+
+<section class="home-slider owl-carousel">
+    <div class="slider-item" style="background-image: url('@Url.Content("~/KhachHang/images/bg_2.jpg")');" data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row slider-text justify-content-center align-items-center">
+                <div class="col-md-7 col-sm-12 text-center ftco-animate">
+                    <h1 class="mb-3 mt-5 bread">GIỎ HÀNG CỦA TÔI</h1>
+                    <p class="breadcrumbs"><span class="mr-2"><a asp-action="Index" asp-controller="TrangChu">Trang Chủ</a></span> <span>Giỏ Hàng</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section ftco-cart">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 ftco-animate">
+                <div class="cart-list">
+                    <table class="table">
+                        <thead class="thead-primary">
+                            <tr class="text-center">
+                                <th>&nbsp;</th>
+                                <th>&nbsp;</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Giá</th>
+                                <th>Số lượng</th>
+                                <th>Tổng cộng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="text-center">
+                                <td class="product-remove"><a href="#"><span class="icon-close"></span></a></td>
+                                <td class="image-prod"><div class="img" style="background-image:url('@Url.Content("~/KhachHang/images/bg_3.jpg")');"></div></td>
+                                <td class="product-name">
+                                    <h3>Tên sản phẩm 1</h3>
+                                    <p>Mô tả ngắn cho sản phẩm.</p>
+                                </td>
+                                <td class="price">150.000 VNĐ</td>
+                                <td class="quantity">
+                                    <div class="input-group mb-3">
+                                        <input type="text" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
+                                    </div>
+                                </td>
+                                <td class="total">150.000 VNĐ</td>
+                            </tr>
+                            <tr class="text-center">
+                                <td class="product-remove"><a href="#"><span class="icon-close"></span></a></td>
+                                <td class="image-prod"><div class="img" style="background-image:url(https://via.placeholder.com/150);"></div></td>
+                                <td class="product-name">
+                                    <h3>Tên sản phẩm 2</h3>
+                                    <p>Mô tả ngắn.</p>
+                                </td>
+                                <td class="price">200.000 VNĐ</td>
+                                <td class="quantity">
+                                    <div class="input-group mb-3">
+                                        <input type="text" name="quantity" class="quantity form-control input-number" value="2" min="1" max="100">
+                                    </div>
+                                </td>
+                                <td class="total">400.000 VNĐ</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-end">
+            <div class="col-lg-4 mt-5 cart-wrap ftco-animate">
+                <div class="cart-total mb-3">
+                    <h3>Tổng Cộng</h3>
+                    <p class="d-flex">
+                        <span>Tạm tính</span>
+                        <span>550.000 VNĐ</span>
+                    </p>
+                    <p class="d-flex">
+                        <span>Phí vận chuyển</span>
+                        <span>Miễn phí</span>
+                    </p>
+                    <hr>
+                    <p class="d-flex total-price">
+                        <span>Tổng cộng (VAT)</span>
+                        <span>550.000 VNĐ</span>
+                    </p>
+                </div>
+                <p><a href="#" class="btn btn-primary py-3 px-4">Tiến hành thanh toán</a></p>
+            </div>
+        </div>
+    </div>
+</section>
