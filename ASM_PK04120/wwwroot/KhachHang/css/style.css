@@ -9316,7 +9316,7 @@ textarea.form-control {
     }
 
 /* Tùy chỉnh nút bấm tìm kiếm */
-.ftco_navbar .search-form .btn {
+.ftco_navbar .search-form .icon-search {
     background: transparent !important;
     color: rgba(255, 255, 255, 0.9) !important;
     border: none !important;
@@ -9325,13 +9325,18 @@ textarea.form-control {
 }
 
     /* Hiệu ứng khi di chuột vào nút bấm */
-    .ftco_navbar .search-form .btn:hover {
+    .ftco_navbar .search-form .icon-search:hover {
         color: #c49b63 !important; /* Đổi màu icon thành màu vàng-nâu */
     }
 
 /* Sửa lỗi dropdown bị mất khi di chuột chéo */
 .ftco_navbar .dropdown-menu {
     margin-top: 0; /* Xóa bỏ khoảng trống phía trên dropdown */
+}
+
+.icon-search 
+{
+    margin: auto;
 }
 
 

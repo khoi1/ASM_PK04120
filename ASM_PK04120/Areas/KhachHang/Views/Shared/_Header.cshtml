@@ -24,7 +24,7 @@
                                 <input type="text" name="query" class="form-control" id="searchInput" placeholder="Tìm kiếm sản phẩm...">
 
                                 <div class="input-group-append">
-                                    <button type="submit" class="btn btn-primary" style="border: none;"><span class="icon-search"></span></button>
+                                    <span class="icon-search"></span>
                                 </div>
                             </div>
                         </form>
@@ -95,7 +95,6 @@
             return;
         }
 
-        // Chú ý: URL tới Controller của bạn
         fetch(`/KhachHang/SanPham/TimKiemSanPham?tuKhoa=${tuKhoa}`)
             .then(response => response.json())
             .then(data => {
@@ -103,10 +102,9 @@
 
                 if (data.length > 0) {
                     data.forEach(product => {
-                        // --- PHẦN THAY ĐỔI LỚN NẰM Ở ĐÂY ---
                         // Tạo một thẻ 'a' bao bọc toàn bộ item
                         const link = document.createElement('a');
-                        link.href = `/KhachHang/SanPham/ChiTietSanPham/${product.maSanPham}`; // Sửa lại đúng với tên property
+                        link.href = `/KhachHang/SanPham/ChiTietSanPham/${product.maSanPham}`;
                         link.classList.add('dropdown-item');
 
                         // Tạo HTML cho nội dung bên trong, bao gồm hình ảnh, tên và giá
