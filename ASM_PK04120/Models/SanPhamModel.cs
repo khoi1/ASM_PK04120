@@ -42,5 +42,7 @@ namespace ASM_PK04120.Models
 
         // Navigation property: Một sản phẩm có trong nhiều chi tiết đơn hàng
         public required virtual ICollection<ChiTietDonHangModel> ChiTietDonHangs { get; set; }
+
+        public required virtual ICollection<GioHangModel> GioHangs { get; set; }
     }
 }
