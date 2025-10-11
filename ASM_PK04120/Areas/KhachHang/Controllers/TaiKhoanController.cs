@@ -38,7 +38,7 @@ namespace ASM_PK04120.Areas.KhachHang.Controllers
                     // Lưu thông tin người dùng vào session
                     HttpContext.Session.SetString("TaiKhoan", tk.TaiKhoan);
                     HttpContext.Session.SetString("HoTen", tk.HoTen);
-                    HttpContext.Session.SetInt32("MaNguoiDung", tk.MaNguoiDung);
+                    HttpContext.Session.SetString("MaNguoiDung", tk.MaNguoiDung.ToString());
                     HttpContext.Session.SetString("VaiTro", tk.VaiTro);
 
                     TempData["ThongBao"] = "Đăng nhập thành công!";

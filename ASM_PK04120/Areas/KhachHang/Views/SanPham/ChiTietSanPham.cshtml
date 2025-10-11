@@ -12,28 +12,37 @@
                 <a href="~/KhachHang/images/AnhSP/@Model.SanPham.HinhAnh" class="image-popup"><img src="~/KhachHang/images/AnhSP/@Model.SanPham.HinhAnh" class="img-fluid" alt="Ảnh sản phẩm"></a>
             </div>
             <div class="col-lg-6 product-details pl-md-5 ftco-animate">
-                <h3>@Model.SanPham.TenSanPham</h3>
-                <p class="price"><span>@Model.SanPham.GiaBan.ToString("N0")</span></p>
-                <p class="stock-quantity">
-                    (Còn lại: @Model.SanPham.SoLuongConLai sản phẩm)
-                </p>
-                <div class="row mt-4">
-                    <div class="w-100"></div>
-                    <div class="input-group col-md-6 d-flex mb-3">
-                        <span class="input-group-btn mr-2">
-                            <button type="button" class="quantity-left-minus btn" data-type="minus" data-field="">
-                                <i class="icon-minus"></i>
-                            </button>
-                        </span>
-                        <input type="text" id="quantity" name="quantity" class="form-control input-number" value="1" min="1" max="100">
-                        <span class="input-group-btn ml-2">
-                            <button type="button" class="quantity-right-plus btn" data-type="plus" data-field="">
-                                <i class="icon-plus"></i>
-                            </button>
-                        </span>
+                <form asp-area="KhachHang" asp-controller="GioHang" asp-action="ThemVaoGio" method="post">
+
+                    @* Input ẩn để gửi mã sản phẩm đi *@
+                    <input type="hidden" name="maSanPham" value="@Model.SanPham.MaSanPham" />
+
+                    <h3>@Model.SanPham.TenSanPham</h3>
+                    <p class="price"><span>@Model.SanPham.GiaBan.ToString("N0") VNĐ</span></p>
+                    <p class="stock-quantity">
+                        (Còn lại: @Model.SanPham.SoLuongConLai sản phẩm)
+                    </p>
+                    <div class="row mt-4">
+                        <div class="w-100"></div>
+                        <div class="input-group col-md-6 d-flex mb-3">
+                            <span class="input-group-btn mr-2">
+                                <button type="button" class="quantity-left-minus btn" data-type="minus">
+                                    <i class="icon-minus"></i>
+                                </button>
+                            </span>
+
+                            @* Sửa lại name="soLuong" để khớp với Action *@
+                            <input type="text" id="quantity" name="soLuong" class="form-control input-number text-center" value="1" min="1" max="@Model.SanPham.SoLuongConLai">
+
+                            <span class="input-group-btn ml-2">
+                                <button type="button" class="quantity-right-plus btn" data-type="plus">
+                                    <i class="icon-plus"></i>
+                                </button>
+                            </span>
+                        </div>
                     </div>
-                </div>
-                <p><a href="#" class="btn btn-primary py-3 px-5">Thêm vào giỏ hàng</a></p>
+                    <p><button type="submit" class="btn btn-primary py-3 px-5">Thêm vào giỏ hàng</button></p>
+                </form>
             </div>
         </div>
     </div>
@@ -92,3 +101,39 @@
         </div>
     </div>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+
+        var quantity = 1; // Giá trị số lượng ban đầu
+
+        // Lấy các nút và ô input
+        const plusBtn = document.querySelector('.quantity-right-plus');
+        const minusBtn = document.querySelector('.quantity-left-minus');
+        const quantityInput = document.getElementById('quantity');
+
+        // Lấy số lượng tồn kho từ thuộc tính max của input
+        const maxQuantity = parseInt(quantityInput.getAttribute('max'));
+
+        // Xử lý khi nhấn nút '+'
+        plusBtn.addEventListener('click', function(e){
+            e.preventDefault();
+            var currentVal = parseInt(quantityInput.value);
+            // Chỉ tăng nếu giá trị hiện tại nhỏ hơn số lượng tồn kho
+            if (!isNaN(currentVal) && currentVal < maxQuantity) {
+                quantityInput.value = currentVal + 1;
+            }
+        });
+
+        // Xử lý khi nhấn nút '-'
+        minusBtn.addEventListener('click', function(e){
+            e.preventDefault();
+            var currentVal = parseInt(quantityInput.value);
+            // Chỉ giảm nếu giá trị hiện tại lớn hơn 1
+            if (!isNaN(currentVal) && currentVal > 1) {
+                quantityInput.value = currentVal - 1;
+            }
+        });
+
+    });
+</script>

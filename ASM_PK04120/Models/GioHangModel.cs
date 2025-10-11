@@ -16,10 +16,10 @@ namespace ASM_PK04120.Models
 
         // Navigation property: Giỏ hàng này ứng với một sản phẩm
         [ForeignKey("MaSanPham")]
-        public virtual required SanPhamModel SanPham { get; set; }
+        public virtual SanPhamModel? SanPham { get; set; }
         // Navigation property: Giỏ hàng này thuộc về một khách hàng
         [ForeignKey("MaNguoiDung")]
-        public virtual required NguoiDungModel NguoiDung { get; set; }
+        public virtual NguoiDungModel? NguoiDung { get; set; }
 
     }
 }

@@ -13,5 +13,6 @@ namespace ASM_PK04120.Data
         public DbSet<SanPhamModel> SanPhams { get; set; }
         public DbSet<DonHangModel> DonHangs { get; set; }
         public DbSet<ChiTietDonHangModel> ChiTietDonHangs { get; set; }
+        public DbSet<GioHangModel> GioHangs { get; set; }
     }
 }
