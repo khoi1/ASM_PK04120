@@ -1,0 +1,37 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model ASM_PK04120.Areas.KhachHang.Models.SanPhamViewModel
+
+<div class="tab-content ftco-animate" id="v-pills-tabContent">
+
+    <div class="tab-pane fade show active" id="v-pills-1" role="tabpanel" aria-labelledby="v-pills-1-tab">
+        <div class="row" style="margin-top: 20px;">
+            @foreach (var sanPham in Model.DanhSachSanPham)
+            {
+                <a class="col-md-4" style="margin-bottom:30px;" asp-action="ChiTietSanPham" asp-route-id="@sanPham.MaSanPham">
+                    <div class="menu-entry">
+                        <img src="~/KhachHang/images/AnhSP/@sanPham.HinhAnh" class="img" alt="@sanPham.TenSanPham" />
+                        <div class="text text-center pt-4">
+                            <h3>@sanPham.TenSanPham</h3>
+                            <p class="price">@sanPham.GiaBan.ToString("N0") VNĐ</p>
+                        </div>
+                    </div>
+                </a>
+            }
+
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col text-center">
+            <div class="block-27">
+                <ul>
+                    @for (int i = 1; i <= Model.TongSoTrang; i++)
+                    {
+                        <li class="@(i == Model.TrangHienTai ? "active" : "")">
+                            <a href="#" data-page="@i">@i</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

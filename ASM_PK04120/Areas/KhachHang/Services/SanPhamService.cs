@@ -2,8 +2,6 @@
 using ASM_PK04120.Areas.KhachHang.Models;
 using ASM_PK04120.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Data.SqlClient;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 namespace ASM_PK04120.Areas.KhachHang.Services
 {
     
@@ -19,7 +17,7 @@ namespace ASM_PK04120.Areas.KhachHang.Services
         {
             try
             {
-                // Xác định khoảng thời gian (ví dụ: 30 ngày gần đây)
+                // Xác định khoảng thời gian (30 ngày gần đây)
                 var mocThoiGian = DateTime.Now.AddDays(-30);
 
                 // Lấy danh sách sản phẩm bán chạy dựa trên số lượng đã bán
@@ -63,6 +61,7 @@ namespace ASM_PK04120.Areas.KhachHang.Services
             try
             {
                 var sanPham = await _context.SanPhams
+                .AsNoTracking()
                 .Include(sp => sp.DanhMuc)
                 .FirstOrDefaultAsync(sp => sp.MaSanPham == maSanPham);
 
@@ -92,7 +91,7 @@ namespace ASM_PK04120.Areas.KhachHang.Services
         {
             try
             {
-                var sp = _context.SanPhams.AsQueryable();
+                var sp = _context.SanPhams.AsNoTracking().AsQueryable();
 
                 // Lọc theo Danh mục
                 if (maDanhMuc.HasValue)
@@ -124,13 +123,13 @@ namespace ASM_PK04120.Areas.KhachHang.Services
                 switch (thuTuSapXep)
                 {
                     case "priceAsc":
-                        sp = sp.OrderBy(p => p.GiaBan);
+                        sp = sp.OrderBy(p => p.GiaBan).ThenBy(p => p.MaSanPham);
                         break;
                     case "priceDesc":
-                        sp = sp.OrderByDescending(p => p.GiaBan);
+                        sp = sp.OrderByDescending(p => p.GiaBan).ThenBy(p => p.MaSanPham);
                         break;
                     default: // "newest" or default
-                        sp = sp.OrderByDescending(p => p.NgayTao);
+                        sp = sp.OrderByDescending(p => p.NgayTao).ThenBy(p => p.MaSanPham);
                         break;
                 }
 
@@ -185,8 +184,9 @@ namespace ASM_PK04120.Areas.KhachHang.Services
                 // Tìm kiếm không phân biệt chữ hoa/thường
                 var tuKhoaLower = tuKhoa.ToLower();
 
-                // 2. Truy vấn, định dạng lại dữ liệu và giới hạn số lượng kết quả
+                // Truy vấn, định dạng lại dữ liệu và giới hạn số lượng kết quả
                 return await _context.SanPhams
+                    .AsNoTracking()
                     .Where(p => p.TenSanPham.ToLower().Contains(tuKhoaLower))
                     .Select(p => new SanPhamTimKiemViewModel // Sử dụng ViewModel
                     {
@@ -195,7 +195,7 @@ namespace ASM_PK04120.Areas.KhachHang.Services
                         HinhAnh = p.HinhAnh,
                         GiaBan = p.GiaBan
                     })
-                    .Take(5) // Giới hạn 10 kết quả
+                    .Take(5) // Giới hạn 5 kết quả
                     .ToListAsync();
             }
             catch (Exception ex)

@@ -37,5 +37,12 @@ namespace ASM_PK04120.Areas.KhachHang.Controllers
             var result = await _sanPhamService.TimKiemSanPhamAsync(tuKhoa);
             return Json(result);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> _FilterProductsPartial(int? maDanhMuc, string? phamViGia, string? thuTuSapXep, int trang = 1)
+        {
+            var sp = await _sanPhamService.LayDanhSachSanPhamAsync(maDanhMuc, phamViGia, thuTuSapXep, trang);
+            return PartialView("_dsSanPhamPartial", sp);
+        }
     }
 }

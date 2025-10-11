@@ -26,88 +26,51 @@
                         }
                         <div class="sidebar-box">
                             <h3 class="sidebar-heading">Lọc Theo Giá</h3>
-                            <form method="get" asp-action="SanPham" class="price-filter-form">
+                            <div class="form-group">
                                 <div class="form-group">
                                     <div class="select-wrap">
                                         <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                        <select onchange="this.form.submit()" class="form-control" id="price-select" name="phamViGia">
-                                            <option value="all" selected="@(Model.PhamViGiaHienTai == "all")">Tất cả mức giá</option>
-                                            <option value="0-100000" selected="@(Model.PhamViGiaHienTai == "0-100000")">Dưới 100,000 VNĐ</option>
-                                            <option value="100000-200000" selected="@(Model.PhamViGiaHienTai == "100000-200000")">100,000 - 200,000 VNĐ</option>
-                                            <option value="200000-300000" selected="@(Model.PhamViGiaHienTai == "200000-300000")">200,000 - 300,000 VNĐ</option>
-                                            <option value="300000-9999999" selected="@(Model.PhamViGiaHienTai == "300000-9999999")">Trên 300,000 VNĐ</option>
+                                        <select class="form-control" id="priceFilter">
+                                            <option value="all">Tất cả mức giá</option>
+                                            <option value="0-100000">Dưới 100,000 VNĐ</option>
+                                            <option value="100000-200000">100,000 - 200,000 VNĐ</option>
+                                            <option value="200000-300000">200,000 - 300,000 VNĐ</option>
+                                            <option value="300000-9999999">Trên 300,000 VNĐ</option>
                                         </select>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
 
                         <div class="sidebar-box">
                             <h3 class="sidebar-heading">Sắp Xếp</h3>
-                            <form method="get" asp-action="SanPham" class="sorting-form">
-                                <div class="form-check">
-                                    <input class="form-check-input" onchange="this.form.submit()" type="radio" name="thuTuSapXep" id="sortNewest" value="newest" checked="@(Model.SapXepHienTai == "newest")">
-                                    <label class="form-check-label" for="sortNewest">
-                                        Mới nhất
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" onchange="this.form.submit()" type="radio" name="thuTuSapXep" id="sortPriceAsc" value="priceAsc" checked="@(Model.SapXepHienTai == "priceAsc")">
-                                    <label class="form-check-label" for="sortPriceAsc">
-                                        Giá: Thấp đến Cao
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" onchange="this.form.submit()" type="radio" name="thuTuSapXep" id="sortPriceDesc" value="priceDesc" checked="@(Model.SapXepHienTai == "priceDesc")">
-                                    <label class="form-check-label" for="sortPriceDesc">
-                                        Giá: Cao đến Thấp
-                                    </label>
-                                </div>
-                            </form>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="sortOrder" id="sortNewest" value="newest" checked>
+                                <label class="form-check-label" for="sortNewest">Mới nhất</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="sortOrder" id="sortPriceAsc" value="priceAsc">
+                                <label class="form-check-label" for="sortPriceAsc">Giá: Thấp đến Cao</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="sortOrder" id="sortPriceDesc" value="priceDesc">
+                                <label class="form-check-label" for="sortPriceDesc">Giá: Cao đến Thấp</label>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-9 nav-link-wrap mb-5">
-                        <div class="nav ftco-animate nav-pills justify-content-center" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                            <a class="nav-link @(Model.MaDanhMucHienTai == null ? "active" : "")" asp-action="SanPham" asp-route-phamViGia="@Model.PhamViGiaHienTai" asp-route-thuTuSapXep="@Model.SapXepHienTai">Tất cả</a>
+                        <div class="nav ftco-animate nav-pills justify-content-center" id="category-filter" role="tablist" aria-orientation="vertical">
+                            <a class="nav-link category-link @(Model.MaDanhMucHienTai == null ? "active" : "")" href="#" data-id="">Tất cả</a>
                             @foreach (var danhMuc in Model.DanhSachDanhMuc)
                             {
-                                <a class="nav-link @(Model.MaDanhMucHienTai == danhMuc.MaDanhMuc ? "active" : "")" asp-action="SanPham" asp-route-maDanhMuc="@danhMuc.MaDanhMuc" asp-route-phamViGia="@Model.PhamViGiaHienTai" asp-route-thuTuSapXep="@Model.SapXepHienTai">@danhMuc.TenDanhMuc</a>
+                                <a class="nav-link category-link @(Model.MaDanhMucHienTai == danhMuc.MaDanhMuc ? "active" : "")" href="#" data-id="@danhMuc.MaDanhMuc">@danhMuc.TenDanhMuc</a>
                             }
                         </div>
-                        <div class="tab-content ftco-animate" id="v-pills-tabContent">
 
-                            <div class="tab-pane fade show active" id="v-pills-1" role="tabpanel" aria-labelledby="v-pills-1-tab">
-                                <div class="row" style="margin-top: 20px;">
-                                    @foreach (var sanPham in Model.DanhSachSanPham)
-                                    {
-                                        <a class="col-md-4" style="margin-bottom:30px;" asp-action="ChiTietSanPham" asp-route-id="@sanPham.MaSanPham">
-                                            <div class="menu-entry">
-                                                <img src="~/KhachHang/images/AnhSP/@sanPham.HinhAnh" class="img" alt="@sanPham.TenSanPham" />
-                                                <div class="text text-center pt-4">
-                                                    <h3>@sanPham.TenSanPham</h3>
-                                                    <p class="price">@sanPham.GiaBan.ToString("N0") VNĐ</p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    }
-                                    
-                                </div>
-                            </div>
-                            <div class="row mt-5">
-                                <div class="col text-center">
-                                    <div class="block-27">
-                                        <ul>
-                                            @for (int i = 1; i <= Model.TongSoTrang; i++)
-                                            {
-                                                <li class="@(i == Model.TrangHienTai ? "active" : "")">
-                                                    <a asp-action="SanPham" asp-route-maDanhMuc="@Model.MaDanhMucHienTai" asp-route-phamViGia="@Model.PhamViGiaHienTai" asp-route-thuTuSapXep="@Model.SapXepHienTai" asp-route-trang="@i">@i</a>
-                                                </li>
-                                            }
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+						<div id="product-list-container">
+							@await Html.PartialAsync("_dsSanPhamPartial", Model)
+						</div>
+						
                     </div>
                     
                 </div>
@@ -116,3 +79,80 @@
         </div>
     </div>
 </section>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+			// Lấy các phần tử cần thiết
+            const productContainer = document.getElementById('product-list-container');
+            const priceFilter = document.getElementById('priceFilter');
+            const sortRadios = document.querySelectorAll('input[name="sortOrder"]');
+            const categoryLinksContainer = document.getElementById('category-filter');
+
+            function fetchProducts(page = 1) {
+				// Lấy các giá trị lọc
+                const priceRange = priceFilter.value;
+                const sortOrder = document.querySelector('input[name="sortOrder"]:checked').value;
+                const activeCategory = categoryLinksContainer.querySelector('.category-link.active');
+                const categoryId = activeCategory ? activeCategory.getAttribute('data-id') : '';
+
+				// Tạo URL với các tham số
+                const url = `/KhachHang/SanPham/_FilterProductsPartial?maDanhMuc=${categoryId}&phamViGia=${priceRange}&thuTuSapXep=${sortOrder}&trang=${page}`;
+
+				// Hiệu ứng tải
+                productContainer.style.opacity = '0.5';
+
+                fetch(url)
+                    .then(response => response.text())
+                    .then(html => {
+                        // Cập nhật nội dung
+                        productContainer.innerHTML = html;
+                        productContainer.style.opacity = '1';
+
+                        // --- PHẦN SỬA LỖI QUAN TRỌNG ---
+                        // Tìm tất cả các sản phẩm mới có class ftco-animate và kích hoạt chúng
+                        const newAnimatedItems = productContainer.querySelectorAll('.ftco-animate');
+                        if(newAnimatedItems.length > 0) {
+                            newAnimatedItems.forEach(item => {
+                                // Thêm các class để kích hoạt hiệu ứng fade-in-up
+                                item.classList.add('fadeInUp', 'ftco-animated');
+                            });
+                        }
+                        // -----------------------------
+                    })
+                    .catch(error => {
+                        console.error('Lỗi khi lọc sản phẩm:', error);
+                        productContainer.style.opacity = '1';
+                    });
+            }
+
+			// Gán sự kiện thay đổi cho các bộ lọc
+            priceFilter.addEventListener('change', () => fetchProducts(1));
+            sortRadios.forEach(radio => radio.addEventListener('change', () => fetchProducts(1)));
+            categoryLinksContainer.addEventListener('click', function (event) {
+				// Chỉ xử lý khi click vào thẻ a
+                const link = event.target.closest('.category-link');
+
+				// Nếu có thẻ a được click
+                if (link) {
+                    event.preventDefault();
+                    categoryLinksContainer.querySelector('.category-link.active').classList.remove('active');
+                    link.classList.add('active');
+                    fetchProducts(1);
+                }
+            });
+			// Xử lý phân trang
+            productContainer.addEventListener('click', function (event) {
+				// Chỉ xử lý khi click vào thẻ a trong phân trang
+                const pageLink = event.target.closest('.block-27 a');
+
+				// Nếu có thẻ a được click
+                if (pageLink) {
+                    event.preventDefault();
+                    const page = pageLink.getAttribute('data-page');
+                    fetchProducts(page);
+                }
+            });
+        });
+    </script>
+}
