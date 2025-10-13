@@ -1,17 +1,19 @@
-﻿@{
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model ASM_PK04120.Areas.Admin.Models.KhachHangViewModel
+@{
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Quản lý khách hàng";
 }
+
 <div id="content-wrapper">
     <div class="container-fluid">
-        <!-- Breadcrumbs-->
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a href="index.html">Trang chủ</a>
+                <a href="#">Trang chủ</a>
             </li>
             <li class="breadcrumb-item active">Quản lý khách hàng</li>
         </ol>
-        <!-- Quản lý khách hàng -->
+
         <div class="card mb-3">
             <div class="card-header bg-primary text-white">
                 <i class="fa fa-users"></i>
@@ -28,43 +30,82 @@
                     <table class="table table-bordered" id="customerTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
-                                <th>Tài khoản</th>
-                                <th>Mật khẩu</th>
                                 <th>Họ tên</th>
+                                <th>Tài khoản</th>
                                 <th>Email</th>
                                 <th>Số điện thoại</th>
-                                <th>Địa chỉ</th>
                                 <th>Trạng thái</th>
                                 <th>Ngày tạo</th>
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Ví dụ dữ liệu -->
-                            <tr>
-                                <td>KH001</td>
-                                <td></td>
-                                <td>Nguyễn Văn C</td>
-                                <td>customer01@example.com</td>
-                                <td>0901234567</td>
-                                <td>123 Đường A, Quận B</td>
-                                <td><span class="badge badge-success">Hoạt động</span></td>
-                                <td></td>
-                                <td>
-                                    <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editCustomerModal">
-                                        <i class="fa fa-pencil"></i> Sửa
-                                    </button>
-                                    <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteCustomerModal">
-                                        <i class="fa fa-trash"></i> Xóa
-                                    </button>
-                                </td>
-                            </tr>
-                            <!-- ...thêm dữ liệu khác... -->
+                            @* --- Vòng lặp để hiển thị dữ liệu thật từ ViewModel --- *@
+                            @if (Model.DanhSachKhachHang.Any())
+                            {
+                                @foreach (var item in Model.DanhSachKhachHang)
+                                {
+                                    <tr>
+                                        <td>@item.HoTen</td>
+                                        <td>@item.TaiKhoan</td>
+                                        <td>@item.Email</td>
+                                        <td>@item.SoDienThoai</td>
+                                        <td>
+                                            @if (item.TrangThai == 1)
+                                            {
+                                                <span class="badge badge-success">Hoạt động</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-danger">Bị khóa</span>
+                                            }
+                                        </td>
+                                        <td>@item.NgayTao.ToString("dd/MM/yyyy")</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editCustomerModal" data-id="@item.MaNguoiDung">
+                                                <i class="fa fa-pencil"></i> Sửa
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="8" class="text-center">Không có dữ liệu khách hàng.</td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
+
+                @* --- PHẦN HIỂN THỊ CÁC NÚT PHÂN TRANG --- *@
+                @if (Model.TongSoTrang > 1)
+                {
+                    <nav>
+                        <ul class="pagination justify-content-center">
+                            @* Nút Trang Trước *@
+                            <li class="page-item @(Model.TrangHienTai == 1 ? "disabled" : "")">
+                                <a class="page-link" asp-action="Index" asp-route-page="@(Model.TrangHienTai - 1)">Trước</a>
+                            </li>
+
+                            @* Các Nút Số Trang *@
+                            @for (int i = 1; i <= Model.TongSoTrang; i++)
+                            {
+                                <li class="page-item @(i == Model.TrangHienTai ? "active" : "")">
+                                    <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+                                </li>
+                            }
+
+                            @* Nút Trang Sau *@
+                            <li class="page-item @(Model.TrangHienTai == Model.TongSoTrang ? "disabled" : "")">
+                                <a class="page-link" asp-action="Index" asp-route-page="@(Model.TrangHienTai + 1)">Sau</a>
+                            </li>
+                        </ul>
+                    </nav>
+                }
             </div>
-            <div class="card-footer small text-muted">Cập nhật hôm qua lúc 11:59 PM</div>
+            <div class="card-footer small text-muted">Cập nhật lúc @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</div>
         </div>
         <!-- Modal Thêm khách hàng -->
         <div class="modal fade" id="addCustomerModal" tabindex="-1" role="dialog" aria-labelledby="addCustomerLabel"

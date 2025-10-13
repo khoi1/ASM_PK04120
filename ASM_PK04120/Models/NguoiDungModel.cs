@@ -42,8 +42,5 @@ namespace ASM_PK04120.Models
 
         // Navigation property: Một người dùng có nhiều đơn hàng
         public virtual ICollection<DonHangModel>? DonHangs { get; set; }
-
-        // Navigation property: Một người dùng có nhiều giỏ hàng
-        public virtual ICollection<GioHangModel>? GioHangs { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using ASM_PK04120.Areas.KhachHang.Services;
+﻿using ASM_PK04120.Areas.Admin.Services;
+using ASM_PK04120.Areas.KhachHang.Services;
 using ASM_PK04120.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -29,6 +30,7 @@ namespace ASM_PK04120
             builder.Services.AddScoped<ITaiKhoanService, TaiKhoanService>();
             builder.Services.AddScoped<ISanPhamService, SanPhamService>();
             builder.Services.AddScoped<IGioHangService, GioHangService>();
+            builder.Services.AddScoped<IQuanLyKhachHangService, QuanLyKhachHangService>();
 
 
 
