@@ -4,6 +4,10 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Quản lý khách hàng";
 }
+@{
+    // Tạo một đối tượng NguoiDungModel rỗng chỉ để cho form "Thêm mới" sử dụng
+    var khachHangMoi = new ASM_PK04120.Models.NguoiDungModel();
+}
 
 <div id="content-wrapper">
     <div class="container-fluid">
@@ -34,13 +38,14 @@
                                 <th>Tài khoản</th>
                                 <th>Email</th>
                                 <th>Số điện thoại</th>
+                                <th>Địa chỉ</th>
                                 <th>Trạng thái</th>
                                 <th>Ngày tạo</th>
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @* --- Vòng lặp để hiển thị dữ liệu thật từ ViewModel --- *@
+                            @* --- VÒNG LẶP HIỂN THỊ DỮ LIỆU THẬT TỪ VIEWMODEL --- *@
                             @if (Model.DanhSachKhachHang.Any())
                             {
                                 @foreach (var item in Model.DanhSachKhachHang)
@@ -50,6 +55,7 @@
                                         <td>@item.TaiKhoan</td>
                                         <td>@item.Email</td>
                                         <td>@item.SoDienThoai</td>
+                                        <td>@item.DiaChi</td>
                                         <td>
                                             @if (item.TrangThai == 1)
                                             {
@@ -62,9 +68,20 @@
                                         </td>
                                         <td>@item.NgayTao.ToString("dd/MM/yyyy")</td>
                                         <td>
-                                            <button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editCustomerModal" data-id="@item.MaNguoiDung">
-                                                <i class="fa fa-pencil"></i> Sửa
+                                            <button class="btn btn-warning btn-sm"
+                                                    data-toggle="modal"
+                                                    data-target="#editModal"
+                                                    data-id="@item.MaNguoiDung"
+													data-taikhoan="@item.TaiKhoan"
+                                                    data-matkhau="@item.MatKhau"
+                                                    data-hoten="@item.HoTen"
+                                                    data-email="@item.Email"
+                                                    data-sdt="@item.SoDienThoai"
+                                                    data-diachi="@item.DiaChi"
+                                                    data-trangthai="@item.TrangThai">
+                                                Sửa
                                             </button>
+
                                         </td>
                                     </tr>
                                 }
@@ -108,10 +125,11 @@
             <div class="card-footer small text-muted">Cập nhật lúc @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</div>
         </div>
         <!-- Modal Thêm khách hàng -->
-        <div class="modal fade" id="addCustomerModal" tabindex="-1" role="dialog" aria-labelledby="addCustomerLabel"
-             aria-hidden="true">
+        <div class="modal fade" id="addCustomerModal" tabindex="-1" role="dialog" aria-labelledby="addCustomerLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
-                <form class="modal-content">
+                @* --- BẮT ĐẦU NÂNG CẤP --- *@
+                <form asp-action="Create" asp-controller="QuanLyKhachHang" method="post" class="modal-content">
+                    @Html.AntiForgeryToken()
                     <div class="modal-header bg-primary text-white">
                         <h5 class="modal-title" id="addCustomerLabel">Thêm khách hàng mới</h5>
                         <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
@@ -119,36 +137,37 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label for="account">Tài khoản</label>
-                            <input type="text" class="form-control" id="account" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Mật khẩu</label>
-                            <input type="password" class="form-control" id="password">
-                        </div>
-                        <div class="form-group">
-                            <label for="customer_name">Họ tên</label>
-                            <input type="text" class="form-control" id="customer_name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="customer_email">Email</label>
-                            <input type="email" class="form-control" id="customer_email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="customer_phone">Số điện thoại</label>
-                            <input type="text" class="form-control" id="customer_phone" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="customer_address">Địa chỉ</label>
-                            <input type="text" class="form-control" id="customer_address">
-                        </div>
+                        @* Không cần asp-validation-summary vì trang sẽ tải lại *@
 
                         <div class="form-group">
-                            <label for="customer_status">Trạng thái</label>
-                            <select class="form-control" id="customer_status">
-                                <option value="active">Hoạt động</option>
-                                <option value="locked">Khóa</option>
+                            <label>Tài khoản</label>
+                            <input name="TaiKhoan" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Mật khẩu</label>
+                            <input name="MatKhau" type="password" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Họ tên</label>
+                            <input name="HoTen" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input name="Email" type="email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Số điện thoại</label>
+                            <input name="SoDienThoai" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Địa chỉ</label>
+                            <input name="DiaChi" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Trạng thái</label>
+                            <select name="TrangThai" class="form-control">
+                                <option value="1">Hoạt động</option>
+                                <option value="0">Khóa</option>
                             </select>
                         </div>
                     </div>
@@ -157,81 +176,82 @@
                         <button class="btn btn-primary" type="submit">Thêm mới</button>
                     </div>
                 </form>
+                @* --- KẾT THÚC NÂNG CẤP --- *@
             </div>
         </div>
         <!-- Modal Sửa khách hàng -->
-        <div class="modal fade" id="editCustomerModal" tabindex="-1" role="dialog" aria-labelledby="editCustomerLabel"
-             aria-hidden="true">
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
-                <form class="modal-content">
-                    <div class="modal-header bg-info text-white">
-                        <h5 class="modal-title" id="editCustomerLabel">Sửa thông tin khách hàng</h5>
-                        <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="edit_account">Tài khoản</label>
-                            <input type="text" class="form-control" id="edit_account" required>
+                <div class="modal-content">
+                    <form asp-action="Edit" method="post">
+                        <div class="modal-header bg-info text-white">
+                            <h5 class="modal-title" id="editCustomerLabel">Sửa thông tin khách hàng</h5>
+                            <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
                         </div>
-                        <div class="form-group">
-                            <label for="edit_password">Mật khẩu</label>
-                            <input type="password" class="form-control" id="edit_password">
+                        <div class="modal-body">
+                            <input type="hidden" id="editMaNguoiDung" name="MaNguoiDung" />
+                            <div class="form-group">
+                                <label for="editTaiKhoan">Tài khoản</label>
+                                <input type="text" class="form-control" id="editTaiKhoan" name="TaiKhoan" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editMatKhau">Mật khẩu</label>
+                                <input type="password" class="form-control" id="editMatKhau" name="MatKhau" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editHoTen">Họ tên</label>
+                                <input type="text" class="form-control" id="editHoTen" name="HoTen" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editEmail">Email</label>
+                                <input type="email" class="form-control" id="editEmail" name="Email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editSDT">Số điện thoại</label>
+                                <input type="text" class="form-control" id="editSDT" name="SoDienThoai" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editDiaChi">Địa chỉ</label>
+                                <input type="text" class="form-control" id="editDiaChi" name="DiaChi">
+                            </div>
+                            <div class="form-group">
+                                <label for="editTrangThai">Trạng thái</label>
+                                <select class="form-control" id="editTrangThai" name="TrangThai">
+                                    <option value="1">Hoạt động</option>
+                                    <option value="0">Khóa</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="edit_customer_name">Họ tên</label>
-                            <input type="text" class="form-control" id="edit_customer_name" required>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                            <button class="btn btn-info" type="submit">Lưu thay đổi</button>
                         </div>
-                        <div class="form-group">
-                            <label for="edit_customer_email">Email</label>
-                            <input type="email" class="form-control" id="edit_customer_email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="edit_customer_phone">Số điện thoại</label>
-                            <input type="text" class="form-control" id="edit_customer_phone" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="edit_customer_address">Địa chỉ</label>
-                            <input type="text" class="form-control" id="edit_customer_address">
-                        </div>
-                        <div class="form-group">
-                            <label for="edit_customer_status">Trạng thái</label>
-                            <select class="form-control" id="edit_customer_status">
-                                <option value="active">Hoạt động</option>
-                                <option value="locked">Khóa</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-                        <button class="btn btn-info" type="submit">Lưu thay đổi</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <!-- Modal Xóa khách hàng -->
-        <div class="modal fade" id="deleteCustomerModal" tabindex="-1" role="dialog"
-             aria-labelledby="deleteCustomerLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <form class="modal-content">
-                    <div class="modal-header bg-danger text-white">
-                        <h5 class="modal-title" id="deleteCustomerLabel">Xóa khách hàng</h5>
-                        <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        Bạn có chắc chắn muốn xóa khách hàng này không?
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-                        <button class="btn btn-danger" type="submit">Xóa</button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-    <!-- Sticky Footer -->
-
 </div>
+
+@section Scripts {
+    <script>
+        $('#editModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Nút bấm mở modal
+            var modal = $(this); // Chính là modal đang mở
+
+            // Truyền dữ liệu từ data-* vào các input trong modal
+            modal.find('#editMaNguoiDung').val(button.data('id'));
+            modal.find('#editTaiKhoan').val(button.data('taikhoan'));
+            modal.find('#editMatKhau').val(button.data('matkhau'));
+            modal.find('#editHoTen').val(button.data('hoten'));
+            modal.find('#editEmail').val(button.data('email'));
+            modal.find('#editSDT').val(button.data('sdt'));
+            modal.find('#editDiaChi').val(button.data('diachi'));
+            modal.find('#editTrangThai').val(button.data('trangthai'));
+        });
+    </script>
+}
+
+

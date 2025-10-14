@@ -20,17 +20,10 @@ namespace ASM_PK04120.Areas.Admin.Controllers
             return View(danhSachKhachHang);
         }
 
-        public IActionResult Create()
-        {
-            // Chỉ cần trả về View rỗng để hiển thị form
-            return View();
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(NguoiDungModel nguoiDung)
         {
-
             if (ModelState.IsValid)
             {
                 var result = await _quanLyKhachHangService.ThemKhachHang(nguoiDung);
@@ -42,31 +35,21 @@ namespace ASM_PK04120.Areas.Admin.Controllers
                 }
                 else
                 {
-                    TempData["ThongBao"] = "Thêm khách hàng thất bại. Vui lòng thử lại.";
-                    TempData["LoaiThongBao"] = "error";
+                    // Thêm lỗi vào ModelState để hiển thị trên form
+                    ModelState.AddModelError(string.Empty, "Thêm khách hàng thất bại. Tài khoản hoặc Email có thể đã tồn tại.");
                 }
             }
-            // Nếu có lỗi validation, quay lại form Create với dữ liệu người dùng đã nhập
-            return View(nguoiDung);
-        }
-
-        public async Task<IActionResult> Edit(int id)
-        {
-            var khachHang = await _quanLyKhachHangService.LayKhachHangTheoId(id);
-            if (khachHang == null)
-            {
-                TempData["ThongBao"] = "Không tìm thấy khách hàng.";
-                TempData["LoaiThongBao"] = "error";
-                return RedirectToAction(nameof(Index));
-            }
-            return View(khachHang);
+            // Nếu thất bại, quay lại trang Index. Modal sẽ không tự mở lại, nhưng TempData có thể dùng để báo lỗi.
+            TempData["ThongBao"] = "Dữ liệu không hợp lệ, vui lòng kiểm tra lại.";
+            TempData["LoaiThongBao"] = "error";
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, NguoiDungModel nguoiDung)
+        public async Task<IActionResult> Edit(int MaNguoiDung, NguoiDungModel nguoiDung)
         {
-            if (id != nguoiDung.MaNguoiDung)
+            if (MaNguoiDung != nguoiDung.MaNguoiDung)
             {
                 return NotFound();
             }
@@ -86,8 +69,7 @@ namespace ASM_PK04120.Areas.Admin.Controllers
                     TempData["LoaiThongBao"] = "error";
                 }
             }
-            // Nếu có lỗi, quay lại form Edit với dữ liệu người dùng đã nhập
-            return View(nguoiDung);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

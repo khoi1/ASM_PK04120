@@ -1,4 +1,5 @@
 ﻿using ASM_PK04120.Data;
+using ASM_PK04120.Areas.Admin.Models;
 using ASM_PK04120.Models;
 using Microsoft.EntityFrameworkCore;
 

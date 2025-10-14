@@ -7,11 +7,12 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="">
 	<meta name="author" content="">
-	<title>RC-POS - Báo cáo tồn kho</title>
+	<title>Admin - Baka Coffee</title>
 	<link href="~/Admin/css/bootstrap.css" rel="stylesheet">
 	<link href="~/Admin/css/font-awesome.css" rel="stylesheet" type="text/css">
 	<link href="~/Admin/css/dataTables.bootstrap4.css" rel="stylesheet">
 	<link href="~/Admin/css/styles.css" rel="stylesheet">
+	<link rel="stylesheet" href="~/KhachHang/css/ThongBao.css">
 </head>
 <body id="page-top">
 	@await Html.PartialAsync("_ThongBao")
@@ -44,6 +45,12 @@
 		<!-- Sidebar -->
 		<ul class="sidebar navbar-nav">
 			<li class="nav-item">
+				<a class="nav-link" asp-area="Admin" asp-controller="ThongKe" asp-action="Index">
+					<i class="fa fa-fw fa-industry"></i>
+					<span>Thống kê</span>
+				</a>
+			</li>
+			<li class="nav-item">
 				<a class="nav-link" asp-area="Admin" asp-controller="QuanLyKhachHang" asp-action="Index">
 					<i class="fa fa-fw fa-bar-chart"></i>
 					<span>Quản lý khách hàng</span>
@@ -53,13 +60,6 @@
 				<a class="nav-link" asp-area="Admin" asp-controller="QuanLySanPham" asp-action="Index">
 					<i class="fa fa-fw fa-tags"></i>
 					<span>Quản lý sản phẩm</span>
-				</a>
-			</li>
-
-			<li class="nav-item">
-				<a class="nav-link" asp-area="Admin" asp-controller="ThongKe" asp-action="Index">
-					<i class="fa fa-fw fa-industry"></i>
-					<span>Thống kê</span>
 				</a>
 			</li>
 		</ul>
@@ -73,5 +73,6 @@
 	<script src="~/Admin/js/rc-pos.min.js"></script>
 	<script src="~/Admin/js/chart.min.js"></script>
 	<script src="~/Admin/js/ThongKe.js"></script>
+	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

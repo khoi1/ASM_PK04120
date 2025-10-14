@@ -1,4 +1,5 @@
-﻿namespace ASM_PK04120.Models
+﻿using ASM_PK04120.Models;
+namespace ASM_PK04120.Areas.Admin.Models
 {
     public class KhachHangViewModel
     {

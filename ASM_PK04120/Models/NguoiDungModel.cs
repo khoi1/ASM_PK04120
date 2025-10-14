@@ -11,20 +11,20 @@ namespace ASM_PK04120.Models
 
         [Required(ErrorMessage = "Tài khoản không được để trống")]
         [StringLength(100)]
-        public required string TaiKhoan { get; set; }
+        public string? TaiKhoan { get; set; }
 
         [Required(ErrorMessage = "Mật khẩu không được để trống")]
         [StringLength(255)]
-        public required string MatKhau { get; set; }
+        public string? MatKhau { get; set; }
 
         [Required(ErrorMessage = "Họ tên không được để trống")]
         [StringLength(255)]
-        public required string HoTen { get; set; }
+        public string? HoTen { get; set; }
 
         [Required(ErrorMessage = "Email không được để trống")]
         [EmailAddress(ErrorMessage = "Email không hợp lệ")]
         [StringLength(255)]
-        public required string Email { get; set; }
+        public string? Email { get; set; }
 
         [StringLength(20)]
         public string? SoDienThoai { get; set; } // Dấu ? cho phép giá trị NULL
@@ -32,9 +32,8 @@ namespace ASM_PK04120.Models
         [StringLength(500)]
         public string? DiaChi { get; set; }
 
-        [Required(ErrorMessage = "Vai trò không được để trống")]
         [StringLength(50)]
-        public required string VaiTro { get; set; }
+        public string? VaiTro { get; set; }
 
         public DateTime NgayTao { get; set; }
 

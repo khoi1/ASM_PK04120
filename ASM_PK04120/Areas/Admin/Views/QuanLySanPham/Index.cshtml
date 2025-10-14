@@ -9,116 +9,6 @@
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item active">Quản lý sản phẩm</li>
 		</ol>
-		<!-- Quản lý sản phẩm -->
-		<!-- Quản lý danh mục -->
-		<div class="card mb-3">
-			<div class="card-header bg-info text-white">
-				<i class="fa fa-tags"></i>
-				Quản lý danh mục
-				<a href="#" class="btn btn-outline-light btn-sm ml-2" data-toggle="modal" data-target="#addCategoryModal" style="float:right;">
-					<i class="fa fa-plus"></i> Thêm danh mục
-				</a>
-			</div>
-			<div class="card-body">
-				<div class="table-responsive">
-					<table class="table table-bordered" id="categoryTable" width="100%" cellspacing="0">
-						<thead>
-							<tr>
-								<th>Tên danh mục</th>
-								<th>Thao tác</th>
-							</tr>
-						</thead>
-						<tbody>
-							<!-- Ví dụ dữ liệu -->
-							<tr>
-								<td>Danh mục 1</td>
-								<td>
-									<button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editCategoryModal"><i class="fa fa-pencil"></i> Sửa</button>
-									<button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteCategoryModal"><i class="fa fa-trash"></i> Xóa</button>
-								</td>
-							</tr>
-							<tr>
-								<td>Danh mục 2</td>
-								<td>
-									<button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editCategoryModal"><i class="fa fa-pencil"></i> Sửa</button>
-									<button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteCategoryModal"><i class="fa fa-trash"></i> Xóa</button>
-								</td>
-							</tr>
-							<!-- ...thêm dữ liệu khác... -->
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-
-		<!-- Modal Thêm danh mục -->
-		<div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addCategoryLabel" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<form class="modal-content">
-					<div class="modal-header bg-info text-white">
-						<h5 class="modal-title" id="addCategoryLabel">Thêm danh mục</h5>
-						<button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">×</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<div class="form-group">
-							<label for="new_category_name">Tên danh mục</label>
-							<input type="text" class="form-control" id="new_category_name" required>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-						<button class="btn btn-info" type="submit">Thêm mới</button>
-					</div>
-				</form>
-			</div>
-		</div>
-
-		<!-- Modal Sửa danh mục -->
-		<div class="modal fade" id="editCategoryModal" tabindex="-1" role="dialog" aria-labelledby="editCategoryLabel" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<form class="modal-content">
-					<div class="modal-header bg-info text-white">
-						<h5 class="modal-title" id="editCategoryLabel">Sửa danh mục</h5>
-						<button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">×</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<div class="form-group">
-							<label for="edit_category_name">Tên danh mục</label>
-							<input type="text" class="form-control" id="edit_category_name" required>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-						<button class="btn btn-info" type="submit">Lưu thay đổi</button>
-					</div>
-				</form>
-			</div>
-		</div>
-
-		<!-- Modal Xóa danh mục -->
-		<div class="modal fade" id="deleteCategoryModal" tabindex="-1" role="dialog" aria-labelledby="deleteCategoryLabel" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<form class="modal-content">
-					<div class="modal-header bg-danger text-white">
-						<h5 class="modal-title" id="deleteCategoryLabel">Xóa danh mục</h5>
-						<button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">×</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						Bạn có chắc chắn muốn xóa danh mục này không?
-					</div>
-					<div class="modal-footer">
-						<button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-						<button class="btn btn-danger" type="submit">Xóa</button>
-					</div>
-				</form>
-			</div>
-		</div>
 		<div class="card mb-3">
 			<div class="card-header bg-primary text-white">
 				<i class="fa fa-tags"></i>
@@ -138,8 +28,8 @@
 								<th>Giá bán</th>
 								<th>Số lượng còn lại</th>
 								<th>Tình trạng</th>
-								<th>Mô tả</th>
 								<th>Hình ảnh</th>
+								<th>Xem chi tiết</th>
 								<th>Thao tác</th>
 							</tr>
 							<tr>
@@ -149,16 +39,49 @@
 								<td></td>
 								<td></td>
 								<td><span class="badge badge-success">Còn hàng</span></td>
-								<td>Micro chất lượng cao, phù hợp phòng thu</td>
 								<td><img src="img/mic-am20.jpg" alt="Audionic MIC AM-20" style="width:40px;height:40px;"></td>
+								<td>
+									<button class="btn btn-sm btn-info" data-toggle="modal" data-target="#viewProduct"><i class="fas fa-eye"></i> Xem</button>
+								</td>
 								<td>
 									<button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editProductModal"><i class="fa fa-pencil"></i> Sửa</button>
 									<button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteProductModal"><i class="fa fa-trash"></i> Xóa</button>
 								</td>
 							</tr>
-							<!-- ...thêm dữ liệu khác... -->
 						</tbody>
 					</table>
+				</div>
+			</div>
+		</div>
+		<!-- Modal Xem chi tiết đơn hàng -->
+		<div class="modal fade" id="viewProduct" tabindex="-1" aria-labelledby="viewProductLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header bg-info text-white">
+						<h5 class="modal-title" id="viewOrderModalLabel">Chi tiết đơn hàng #<span id="maDonHang1"></span></h5>
+						<button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					</div>
+					<div class="modal-body">
+						<div class="row mb-3">
+							<div class="col-md-6">
+								<h6>Thông tin khách hàng</h6>
+								<p><strong>Tên:</strong> <span id="tenKhachHang"></span></p>
+								<p><strong>SĐT:</strong> <span id="soDienThoai"></span></p>
+								<p><strong>Địa chỉ:</strong> <span id="diaChiGiaoHang"></span></p>
+								<p><strong>Ghi chú:</strong> <span id="ghiChu"></span></p>
+							</div>
+							<div class="col-md-6">
+								<input type="hidden" id="ID" name="name" value="" />
+								<h6>Thông tin đơn hàng</h6>
+								<p><strong>Mã đơn:</strong> <span id="maDonHang2"></span></p>
+								<p><strong>Ngày đặt:</strong> <span id="thoiGianDatHang"></span></p>
+								<p><strong>Trạng thái:</strong> <span id="trangThai" class="badge bg-warning"></span></p>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+					</div>
 				</div>
 			</div>
 		</div>
