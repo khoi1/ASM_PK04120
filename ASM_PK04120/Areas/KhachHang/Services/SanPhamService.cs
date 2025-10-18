@@ -22,7 +22,7 @@ namespace ASM_PK04120.Areas.KhachHang.Services
 
                 // Lấy danh sách sản phẩm bán chạy dựa trên số lượng đã bán
                 var sp = _context.ChiTietDonHangs
-                    .Where(chiTiet => chiTiet.DonHang.NgayDatHang >= mocThoiGian)
+                    .Where(chiTiet => chiTiet.DonHang.NgayDatHang >= mocThoiGian && chiTiet.SanPham.TinhTrang == true)
                     .GroupBy(ct => ct.MaSanPham)
                     .Select(g => new
                     {
@@ -71,7 +71,7 @@ namespace ASM_PK04120.Areas.KhachHang.Services
                 }
 
                 var sanPhamTuongTu = await _context.SanPhams
-                    .Where(sp => sp.MaDanhMuc == sanPham.MaDanhMuc && sp.MaSanPham != maSanPham)
+                    .Where(sp => sp.MaDanhMuc == sanPham.MaDanhMuc && sp.MaSanPham != maSanPham && sp.TinhTrang == true)
                     .Take(4)
                     .ToListAsync();
                 return new ChiTietSanPhamViewModel
@@ -91,7 +91,10 @@ namespace ASM_PK04120.Areas.KhachHang.Services
         {
             try
             {
-                var sp = _context.SanPhams.AsNoTracking().AsQueryable();
+                var sp = _context.SanPhams
+                    .Where(sp => sp.TinhTrang == true)
+                    .AsNoTracking()
+                    .AsQueryable();
 
                 // Lọc theo Danh mục
                 if (maDanhMuc.HasValue)
@@ -187,7 +190,7 @@ namespace ASM_PK04120.Areas.KhachHang.Services
                 // Truy vấn, định dạng lại dữ liệu và giới hạn số lượng kết quả
                 return await _context.SanPhams
                     .AsNoTracking()
-                    .Where(p => p.TenSanPham.ToLower().Contains(tuKhoaLower))
+                    .Where(p => p.TenSanPham.ToLower().Contains(tuKhoaLower) && p.TinhTrang == true)
                     .Select(p => new SanPhamTimKiemViewModel // Sử dụng ViewModel
                     {
                         MaSanPham = p.MaSanPham,

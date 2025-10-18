@@ -39,15 +39,24 @@ namespace ASM_PK04120.Areas.KhachHang.Controllers
             if (string.IsNullOrEmpty(maNguoiDungStr))
             {
                 return RedirectToAction("DangNhap", "TaiKhoan", new { area = "KhachHang" });
-            }
+            }    
 
             int maNguoiDung = int.Parse(maNguoiDungStr);
+            var ketQua = await _gioHangService.ThemVaoGio(maNguoiDung, maSanPham, soLuong);
 
-            await _gioHangService.ThemVaoGio(maNguoiDung, maSanPham, soLuong);
+            TempData["ThongBao"] = ketQua.ThongBao;
+            TempData["LoaiThongBao"] = ketQua.LoaiThongBao;
 
-            // Chuyển hướng về trang giỏ hàng sau khi thêm
-            return RedirectToAction("Index");
+            if (ketQua.ThanhCong)
+            {
+                return RedirectToAction("Index");
+            }    
+            else
+            {
+                return RedirectToAction("ChiTietSanPham", "SanPham", new { area = "KhachHang", id = maSanPham });
+            }    
         }
+
 
         [HttpPost]
         public async Task<IActionResult> XoaKhoiGio(int maGioHang)
@@ -56,10 +65,13 @@ namespace ASM_PK04120.Areas.KhachHang.Controllers
             if (string.IsNullOrEmpty(maNguoiDungStr))
             {
                 return RedirectToAction("DangNhap", "TaiKhoan", new { area = "KhachHang" });
-            }
-            // Bạn có thể thêm một bước kiểm tra xem `maGioHang` này có thực sự thuộc về người dùng đang đăng nhập không để tăng bảo mật
+            }    
 
-            await _gioHangService.XoaKhoiGio(maGioHang);
+            var ketQua = await _gioHangService.XoaKhoiGio(maGioHang);
+
+            TempData["ThongBao"] = ketQua.ThongBao;
+            TempData["LoaiThongBao"] = ketQua.LoaiThongBao;
+
             return RedirectToAction("Index");
         }
     }

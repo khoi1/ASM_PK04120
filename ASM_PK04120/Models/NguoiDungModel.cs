@@ -27,7 +27,7 @@ namespace ASM_PK04120.Models
         public string? Email { get; set; }
 
         [StringLength(20)]
-        public string? SoDienThoai { get; set; } // Dấu ? cho phép giá trị NULL
+        public string? SoDienThoai { get; set; }
 
         [StringLength(500)]
         public string? DiaChi { get; set; }

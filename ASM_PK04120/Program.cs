@@ -19,8 +19,8 @@ namespace ASM_PK04120
             // ĐĂNG KÝ DỊCH VỤ SESSION
             builder.Services.AddSession(options =>
             {
-                // Tùy chọn: Cài đặt thời gian timeout cho session, ví dụ 30 phút
-                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                // Tùy chọn: Cài đặt thời gian timeout cho session, ví dụ 1 tiếng
+                options.IdleTimeout = TimeSpan.FromHours(1);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
@@ -31,6 +31,7 @@ namespace ASM_PK04120
             builder.Services.AddScoped<ISanPhamService, SanPhamService>();
             builder.Services.AddScoped<IGioHangService, GioHangService>();
             builder.Services.AddScoped<IQuanLyKhachHangService, QuanLyKhachHangService>();
+            builder.Services.AddScoped<IQuanLySanPhamService, QuanLySanPhamService>();
 
 
 

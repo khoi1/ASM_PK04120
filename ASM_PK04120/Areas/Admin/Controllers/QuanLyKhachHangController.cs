@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ASM_PK04120.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class QuanLyKhachHangController : Controller
+    public class QuanLyKhachHangController : AdminBaseController
     {
         private readonly IQuanLyKhachHangService _quanLyKhachHangService;
 

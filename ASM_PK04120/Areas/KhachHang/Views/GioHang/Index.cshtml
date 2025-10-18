@@ -47,7 +47,9 @@
                                         </td>
                                         <td class="image-prod"><div class="img" style="background-image:url(/KhachHang/images/AnhSP/@item.SanPham!.HinhAnh);"></div></td>
                                         <td class="product-name">
-                                            <h3>@item.SanPham.TenSanPham</h3>
+                                            <h3>
+                                                <a asp-area="KhachHang" asp-controller="SanPham" asp-action="ChiTietSanPham" asp-route-id="@item.SanPham.MaSanPham">@item.SanPham.TenSanPham</a>
+                                            </h3>
                                         </td>
                                         <td class="price">@item.SanPham.GiaBan.ToString("N0") VNĐ</td>
 

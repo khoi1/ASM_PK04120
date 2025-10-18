@@ -9697,3 +9697,11 @@ textarea.form-control {
             color: #000;
         }
 
+
+/* Ẩn mũi tên tăng giảm trong input number - Chrome, Safari, Edge */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+

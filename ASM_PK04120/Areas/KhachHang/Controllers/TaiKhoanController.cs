@@ -28,27 +28,35 @@ namespace ASM_PK04120.Areas.KhachHang.Controllers
         {
             try
             {
-                if(!ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
-                   return View(viewModel);
+                    return View(viewModel);
                 }
+
                 var tk = await _taiKhoanService.DangNhapAsync(viewModel);
-                if (tk != null)
-                {
-                    // Lưu thông tin người dùng vào session
-                    HttpContext.Session.SetString("TaiKhoan", tk.TaiKhoan);
-                    HttpContext.Session.SetString("HoTen", tk.HoTen);
-                    HttpContext.Session.SetString("MaNguoiDung", tk.MaNguoiDung.ToString());
-                    HttpContext.Session.SetString("VaiTro", tk.VaiTro);
 
-                    TempData["ThongBao"] = "Đăng nhập thành công!";
-                    TempData["LoaiThongBao"] = "success";
-                    return RedirectToAction("Index", "TrangChu");
+                if (tk == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Tài khoản hoặc mật khẩu không chính xác.");
+                    return View(viewModel);
                 }
 
-                // Nếu service trả về null, nghĩa là đăng nhập thất bại
-                ModelState.AddModelError(string.Empty, "Tài khoản hoặc mật khẩu không chính xác.");
-                return View(viewModel);
+                if (tk.HoTen == "KhoaTK")
+                {
+                    ModelState.AddModelError(string.Empty, "Tài khoản của bạn đang bị khoá.");
+                    return View(viewModel);
+                }
+
+                // Đăng nhập thành công
+                HttpContext.Session.SetString("TaiKhoan", tk.TaiKhoan!);
+                HttpContext.Session.SetString("HoTen", tk.HoTen!);
+                HttpContext.Session.SetString("MaNguoiDung", tk.MaNguoiDung.ToString());
+                HttpContext.Session.SetString("VaiTro", tk.VaiTro!);
+
+                TempData["ThongBao"] = "Đăng nhập thành công!";
+                TempData["LoaiThongBao"] = "success";
+
+                return RedirectToAction("Index", "TrangChu");
             }
             catch (Exception)
             {

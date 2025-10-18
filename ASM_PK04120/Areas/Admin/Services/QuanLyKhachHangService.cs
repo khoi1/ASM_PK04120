@@ -45,22 +45,6 @@ namespace ASM_PK04120.Areas.Admin.Services
             } 
         }
 
-        public async Task<NguoiDungModel?> LayKhachHangTheoId(int maNguoiDung)
-        {
-            if (maNguoiDung <= 0) return null;
-            try
-            {
-                return await _context.NguoiDungs
-                            .AsNoTracking()
-                            .FirstOrDefaultAsync(kh => kh.MaNguoiDung == maNguoiDung && kh.VaiTro == "Khách hàng");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Lỗi khi lấy khách hàng theo ID: " + ex.Message);
-                return null;
-            }
-        }
-
         public async Task<bool> ThemKhachHang(NguoiDungModel nguoiDung)
         {
             if (nguoiDung == null) return false;

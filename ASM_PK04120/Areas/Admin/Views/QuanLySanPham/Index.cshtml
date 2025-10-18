@@ -1,6 +1,12 @@
-﻿@{
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model ASM_PK04120.Areas.Admin.Models.DsSanPhamViewModel
+@{
 	Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 	ViewData["Title"] = "Quản lý sản phẩm";
+}
+@if (TempData["ThongBaoChiTiet"] != null)
+{
+	<div class="alert alert-warning">@TempData["ThongBaoChiTiet"]</div>
 }
 
 <div id="content-wrapper">
@@ -18,9 +24,28 @@
 				</a>
 			</div>
 			<div class="card-body">
+				<div class="mb-3">
+					<form asp-action="Index" method="get" class="form-inline">
+						<div class="form-group">
+							<label class="mr-2">Tìm kiếm:</label>
+							<input type="text" name="tuKhoa" value="@Model.TuKhoa" class="form-control" placeholder="Nhập tên sản phẩm...">
+						</div>
+						<div class="col-md-2">
+							<select class="form-control" name="sapXep">
+								<option value="">-- Chọn tình trạng --</option>
+								<option value="Hết hàng" selected="@(Model.SapXep == "Hết hàng")">Hết hàng</option>
+								<option value="Sắp hết hàng" selected="@(Model.SapXep == "Sắp hết hàng")">Sắp hết hàng</option>
+								<option value="Tên từ a-z" selected="@(Model.SapXep == "Tên từ a-z")">Tên từ a-z</option>
+								<option value="Tên từ z-a" selected="@(Model.SapXep == "Tên từ z-a")">Tên từ z-a</option>
+							</select>
+						</div>
+						<button type="submit" class="btn btn-primary ml-2"><i class="fa fa-search"></i> Tìm</button>
+						<a asp-action="Index" class="btn btn-secondary ml-2">Làm mới</a>
+					</form>
+				</div>
 				<div class="table-responsive">
 					<table class="table table-bordered" id="productTable" width="100%" cellspacing="0">
-						<tbody>
+						<tbody class="text-center">
 							<tr>
 								<th>Tên sản phẩm</th>
 								<th>Danh mục</th>
@@ -32,50 +57,117 @@
 								<th>Xem chi tiết</th>
 								<th>Thao tác</th>
 							</tr>
-							<tr>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td><span class="badge badge-success">Còn hàng</span></td>
-								<td><img src="img/mic-am20.jpg" alt="Audionic MIC AM-20" style="width:40px;height:40px;"></td>
-								<td>
-									<button class="btn btn-sm btn-info" data-toggle="modal" data-target="#viewProduct"><i class="fas fa-eye"></i> Xem</button>
-								</td>
-								<td>
-									<button class="btn btn-sm btn-info" data-toggle="modal" data-target="#editProductModal"><i class="fa fa-pencil"></i> Sửa</button>
-									<button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteProductModal"><i class="fa fa-trash"></i> Xóa</button>
-								</td>
-							</tr>
+							@foreach (var item in Model.DanhSachSanPham)
+							{
+								<tr>
+									<td>@item.SanPham.TenSanPham</td>
+									<td>@item.DanhMuc.TenDanhMuc</td>
+									<td>@item.SanPham.GiaNhap.ToString("N0")</td>
+									<td>@item.SanPham.GiaBan.ToString("N0")</td>
+									<td>@item.SanPham.SoLuongConLai</td>
+									<td>
+										@if (item.SanPham.TinhTrang)
+										{
+											<span class="badge badge-success">Hiện</span>
+										}
+										else
+										{
+											<span class="badge badge-secondary">Ẩn</span>
+										}
+									</td>
+									<td><img src="~/KhachHang/images/AnhSP/@item.SanPham.HinhAnh" alt="Audionic MIC AM-20" style="width:40px;height:40px;"></td>
+									<td>
+										<button class="btn btn-sm btn-success" data-toggle="modal" data-target="#viewProductModal"
+												data-id="@item.SanPham.MaSanPham"
+												data-tensanpham="@item.SanPham.TenSanPham"
+												data-tendanhmuc="@item.SanPham.DanhMuc?.TenDanhMuc"
+												data-gianhap="@item.SanPham.GiaNhap.ToString("N0")"
+												data-giaban="@item.SanPham.GiaBan.ToString("N0")"
+												data-soluong="@item.SanPham.SoLuongConLai"
+												data-tinhtrang="@item.SanPham.TinhTrang"
+												data-ngaytao="@item.SanPham.NgayTao.ToString("dd/MM/yyyy HH:mm")"
+												data-hinhanh="@item.SanPham.HinhAnh"
+												data-mota="@item.SanPham.MoTa">
+											<i class="fas fa-eye"></i> Xem
+										</button>
+									</td>
+									<td>
+										<button class="btn btn-warning btn-sm"
+												data-toggle="modal"
+												data-target="#editProductModal"
+												data-id="@item.SanPham.MaSanPham"
+												data-tensanpham="@item.SanPham.TenSanPham"
+												data-madanhmuc="@item.SanPham.MaDanhMuc"
+												data-gianhap="@item.SanPham.GiaNhap"
+												data-giaban="@item.SanPham.GiaBan"
+												data-soluongconlai="@item.SanPham.SoLuongConLai"
+												data-tinhtrang="@item.SanPham.TinhTrang"
+												data-mota="@item.SanPham.MoTa"
+												data-hinhanh="@item.SanPham.HinhAnh">
+											<i class="fa fa-pencil"></i>
+											Sửa
+										</button>
+										<button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteProductModal" data-id="@item.SanPham.MaSanPham">
+										<i class="fa fa-trash"></i> Xóa</button>
+									</td>
+								</tr>
+							}
 						</tbody>
 					</table>
 				</div>
 			</div>
 		</div>
+		@if (Model.TongSoTrang > 1)
+		{
+			<nav>
+				<ul class="pagination justify-content-center">
+					@* Nút Trang Trước *@
+					<li class="page-item @(Model.TrangHienTai == 1 ? "disabled" : "")">
+						<a class="page-link" asp-action="Index" asp-route-page="@(Model.TrangHienTai - 1)">Trước</a>
+					</li>
+
+					@* Các Nút Số Trang *@
+					@for (int i = 1; i <= Model.TongSoTrang; i++)
+					{
+						<li class="page-item @(i == Model.TrangHienTai ? "active" : "")">
+							<a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+						</li>
+					}
+
+					@* Nút Trang Sau *@
+					<li class="page-item @(Model.TrangHienTai == Model.TongSoTrang ? "disabled" : "")">
+						<a class="page-link" asp-action="Index" asp-route-page="@(Model.TrangHienTai + 1)">Sau</a>
+					</li>
+				</ul>
+			</nav>
+		}
 		<!-- Modal Xem chi tiết đơn hàng -->
-		<div class="modal fade" id="viewProduct" tabindex="-1" aria-labelledby="viewProductLabel" aria-hidden="true">
+		<div class="modal fade" id="viewProductModal" tabindex="-1" aria-labelledby="viewProductLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
-					<div class="modal-header bg-info text-white">
-						<h5 class="modal-title" id="viewOrderModalLabel">Chi tiết đơn hàng #<span id="maDonHang1"></span></h5>
+					<div class="modal-header bg-success text-white">
+						<h5 class="modal-title" id="viewProductLabel">Chi tiết sản phẩm</h5>
 						<button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
 					</div>
 					<div class="modal-body">
-						<div class="row mb-3">
-							<div class="col-md-6">
-								<h6>Thông tin khách hàng</h6>
-								<p><strong>Tên:</strong> <span id="tenKhachHang"></span></p>
-								<p><strong>SĐT:</strong> <span id="soDienThoai"></span></p>
-								<p><strong>Địa chỉ:</strong> <span id="diaChiGiaoHang"></span></p>
-								<p><strong>Ghi chú:</strong> <span id="ghiChu"></span></p>
+						<div class="row">
+							<div class="col-md-5 text-center">
+								<h6>Hình ảnh đại diện</h6>
+								<img id="detail_HinhAnh" src="" class="img-fluid rounded mb-3" alt="Hình ảnh sản phẩm">
+								<h6>Hình ảnh mô tả</h6>
+								<img id="detail_MoTa" src="" class="img-fluid rounded" alt="Hình ảnh mô tả">
 							</div>
-							<div class="col-md-6">
-								<input type="hidden" id="ID" name="name" value="" />
-								<h6>Thông tin đơn hàng</h6>
-								<p><strong>Mã đơn:</strong> <span id="maDonHang2"></span></p>
-								<p><strong>Ngày đặt:</strong> <span id="thoiGianDatHang"></span></p>
-								<p><strong>Trạng thái:</strong> <span id="trangThai" class="badge bg-warning"></span></p>
+							<div class="col-md-7">
+								<h4 id="detail_TenSanPham"></h4>
+								<table class="table table-sm table-borderless">
+									<tr><td><strong>Mã sản phẩm:</strong></td><td id="detail_MaSanPham"></td></tr>
+									<tr><td><strong>Danh mục:</strong></td><td id="detail_TenDanhMuc"></td></tr>
+									<tr><td><strong>Giá nhập:</strong></td><td id="detail_GiaNhap"></td></tr>
+									<tr><td><strong>Giá bán:</strong></td><td id="detail_GiaBan"></td></tr>
+									<tr><td><strong>Số lượng tồn:</strong></td><td id="detail_SoLuong"></td></tr>
+									<tr><td><strong>Tình trạng:</strong></td><td><span id="detail_TinhTrang" class="badge"></span></td></tr>
+									<tr><td><strong>Ngày tạo:</strong></td><td id="detail_NgayTao"></td></tr>
+								</table>
 							</div>
 						</div>
 					</div>
@@ -88,7 +180,7 @@
 		<!-- Modal Thêm sản phẩm -->
 		<div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductLabel" aria-hidden="true">
 			<div class="modal-dialog" role="document">
-				<form class="modal-content">
+				<form class="modal-content" asp-action="Create" method="post" enctype="multipart/form-data">
 					<div class="modal-header bg-primary text-white">
 						<h5 class="modal-title" id="addProductLabel">Thêm sản phẩm mới</h5>
 						<button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
@@ -98,43 +190,45 @@
 					<div class="modal-body">
 						<div class="form-group">
 							<label for="product_name">Tên sản phẩm</label>
-							<input type="text" class="form-control mb-2" id="product_name" required>
+							<input type="text" class="form-control mb-2" id="product_name" name="TenSanPham" required>
 							<div class="form-row align-items-center mb-2">
 								<div class="col-md-8">
 									<label for="category_select" class="mr-2">Chọn danh mục</label>
-									<select class="form-control" id="category_select">
-										<option value="1">Danh mục 1</option>
-										<option value="2">Danh mục 2</option>
+									<select class="form-control" id="category_select" name="MaDanhMuc">
+										@foreach (var dm in Model.DanhSachDanhMuc)
+										{
+											<option value="@dm.MaDanhMuc">@dm.TenDanhMuc</option>
+										}
 									</select>
 								</div>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="import_price">Giá nhập</label>
-							<input type="number" class="form-control" id="import_price" required>
+							<input type="text" class="form-control" id="import_price" name="GiaNhap" required>
 						</div>
 						<div class="form-group">
 							<label for="price">Giá bán</label>
-							<input type="number" class="form-control" id="price" required>
+							<input type="text" class="form-control" id="price" name="GiaBan" required>
 						</div>
 						<div class="form-group">
 							<label for="quantity">Số lượng còn lại</label>
-							<input type="number" class="form-control" id="quantity" required>
+							<input type="number" class="form-control" id="quantity" name="SoLuongConLai" required>
 						</div>
 						<div class="form-group">
 							<label for="status">Tình trạng</label>
-							<select class="form-control" id="status">
-								<option value="available">Còn hàng</option>
-								<option value="out">Hết hàng</option>
+							<select class="form-control" id="status" name="TinhTrang">
+								<option value="True">Hiện</option>
+								<option value="False">Ẩn</option>
 							</select>
 						</div>
 						<div class="form-group">
 							<label for="product_desc">Mô tả</label>
-							<textarea class="form-control" id="product_desc" rows="3"></textarea>
+							<input type="file" class="form-control-file" id="product_desc" name="moTaAnh">
 						</div>
 						<div class="form-group">
 							<label for="product_image">Hình ảnh</label>
-							<input type="file" class="form-control-file" id="product_image">
+							<input type="file" class="form-control-file" id="product_image" name="hinhAnh">
 						</div>
 					</div>
 					<div class="modal-footer">
@@ -147,7 +241,8 @@
 		<!-- Modal Sửa sản phẩm -->
 		<div class="modal fade" id="editProductModal" tabindex="-1" role="dialog" aria-labelledby="editProductLabel" aria-hidden="true">
 			<div class="modal-dialog" role="document">
-				<form class="modal-content">
+				<form id="editProductForm" class="modal-content" asp-action="Edit" method="post" enctype="multipart/form-data">
+					@Html.AntiForgeryToken()
 					<div class="modal-header bg-info text-white">
 						<h5 class="modal-title" id="editProductLabel">Sửa thông tin sản phẩm</h5>
 						<button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
@@ -155,45 +250,50 @@
 						</button>
 					</div>
 					<div class="modal-body">
+						<input type="hidden" id="edit_MaSanPham" name="MaSanPham" />
 						<div class="form-group">
-							<label for="edit_product_name">Tên sản phẩm</label>
-							<input type="text" class="form-control" id="edit_product_name" required>
+							<label for="edit_TenSanPham">Tên sản phẩm</label>
+							<input type="text" class="form-control" id="edit_TenSanPham" name="TenSanPham" required>
 							<div class="form-row align-items-center mb-2">
 								<div class="col-md-8">
-									<label for="edit_category_select" class="mr-2">Chọn danh mục</label>
-									<select class="form-control" id="edit_category_select">
-										<option value="1">Danh mục 1</option>
-										<option value="2">Danh mục 2</option>
+									<label for="edit_MaDanhMuc" class="mr-2">Chọn danh mục</label>
+									<select class="form-control" id="edit_MaDanhMuc" name="MaDanhMuc">
+										@foreach (var dm in Model.DanhSachDanhMuc)
+										{
+											<option value="@dm.MaDanhMuc">@dm.TenDanhMuc</option>
+										}
 									</select>
 								</div>
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="edit_import_price">Giá nhập</label>
-							<input type="number" class="form-control" id="edit_import_price" required>
+							<label for="edit_GiaNhap">Giá nhập</label>
+							<input type="number" class="form-control" id="edit_GiaNhap" name="GiaNhap" required>
 						</div>
 						<div class="form-group">
-							<label for="edit_price">Giá bán</label>
-							<input type="number" class="form-control" id="edit_price" required>
+							<label for="edit_GiaBan">Giá bán</label>
+							<input type="number" class="form-control" id="edit_GiaBan" name="GiaBan" required>
 						</div>
 						<div class="form-group">
-							<label for="edit_quantity">Số lượng còn lại</label>
-							<input type="number" class="form-control" id="edit_quantity" required>
+							<label for="edit_SoLuongConLai">Số lượng còn lại</label>
+							<input type="number" class="form-control" id="edit_SoLuongConLai" name="SoLuongConLai" required>
 						</div>
 						<div class="form-group">
-							<label for="edit_status">Tình trạng</label>
-							<select class="form-control" id="edit_status">
-								<option value="available">Còn hàng</option>
-								<option value="out">Hết hàng</option>
+							<label for="edit_TinhTrang">Tình trạng</label>
+							<select class="form-control" id="edit_TinhTrang" name="TinhTrang">
+								<option value="True">Hiện</option>
+								<option value="False">Ẩn</option>
 							</select>
 						</div>
 						<div class="form-group">
-							<label for="edit_product_desc">Mô tả</label>
-							<textarea class="form-control" id="edit_product_desc" rows="3"></textarea>
+							<label for="edit_MoTa">Mô tả</label>
+							<img id="edit_MoTa" src="" class="img-fluid rounded mb-3" alt="Hình ảnh mô tả sản phẩm">
+							<input name="moTaAnhMoi" type="file" class="form-control-file">
 						</div>
 						<div class="form-group">
-							<label for="edit_product_image">Hình ảnh đại diện</label>
-							<input type="file" class="form-control-file" id="edit_product_image">
+							<label for="edit_HinhAnh">Hình ảnh đại diện</label>
+							<img id="edit_HinhAnh" src="" class="img-fluid rounded mb-3" alt="Hình ảnh sản phẩm">
+							<input type="file" class="form-control-file" name="hinhAnhMoi">
 						</div>
 					</div>
 					<div class="modal-footer">
@@ -206,13 +306,15 @@
 		<!-- Modal Xóa sản phẩm -->
 		<div class="modal fade" id="deleteProductModal" tabindex="-1" role="dialog" aria-labelledby="deleteProductLabel" aria-hidden="true">
 			<div class="modal-dialog" role="document">
-				<form class="modal-content">
+				<form class="modal-content" asp-action="Delete" method="post">
+					@Html.AntiForgeryToken()
 					<div class="modal-header bg-danger text-white">
 						<h5 class="modal-title" id="deleteProductLabel">Xóa sản phẩm</h5>
 						<button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">×</span>
 						</button>
 					</div>
+					<input type="hidden" id="delete_MaSanPham" name="maSanPham" />
 					<div class="modal-body">
 						Bạn có chắc chắn muốn xóa sản phẩm này không?
 					</div>
@@ -224,160 +326,90 @@
 			</div>
 		</div>
 	</div>
-	<!-- ...existing code for footer, scripts, etc... -->
-	<!-- Modal Thêm loại sản phẩm -->
-	<div class="modal fade" id="addProductTypeModal" tabindex="-1" role="dialog" aria-labelledby="addProductTypeLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<form class="modal-content">
-				<div class="modal-header bg-primary text-white">
-					<h5 class="modal-title" id="addProductTypeLabel">Thêm danh mục sản phẩm</h5>
-					<button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">×</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="form-group">
-						<label for="category_code">Mã danh mục</label>
-						<input type="text" class="form-control" id="category_code" required>
-					</div>
-					<div class="form-group">
-						<label for="category_name">Tên danh mục</label>
-						<input type="text" class="form-control" id="category_name" required>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-					<button class="btn btn-primary" type="submit">Thêm mới</button>
-				</div>
-			</form>
-		</div>
-	</div>
-
-	<!-- Modal Thêm nhà cung cấp -->
-	<div class="modal fade" id="addProductVendorModal" tabindex="-1" role="dialog" aria-labelledby="addProductVendorLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<form class="modal-content">
-				<div class="modal-header bg-primary text-white">
-					<h5 class="modal-title" id="addProductVendorLabel">Thêm nhà cung cấp</h5>
-					<button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">×</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="form-group">
-						<label for="vendor_name">Tên nhà cung cấp</label>
-						<input type="text" class="form-control" id="vendor_name" required>
-					</div>
-					<div class="form-group">
-						<label for="vendor_phone">Số điện thoại</label>
-						<input type="text" class="form-control" id="vendor_phone">
-					</div>
-					<div class="form-group">
-						<label for="vendor_email">Email</label>
-						<input type="email" class="form-control" id="vendor_email">
-					</div>
-					<div class="form-group">
-						<label for="vendor_desc">Mô tả</label>
-						<textarea class="form-control" id="vendor_desc" rows="3"></textarea>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-					<button class="btn btn-primary" type="submit">Thêm mới</button>
-				</div>
-			</form>
-		</div>
-	</div>
-
-	<!-- Modal Thêm thương hiệu -->
-	<div class="modal fade" id="addProductBrandModal" tabindex="-1" role="dialog" aria-labelledby="addProductBrandLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<form class="modal-content">
-				<div class="modal-header bg-primary text-white">
-					<h5 class="modal-title" id="addProductBrandLabel">Thêm thương hiệu</h5>
-					<button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">×</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="form-group">
-						<label for="brand_name">Tên thương hiệu</label>
-						<input type="text" class="form-control" id="brand_name" required>
-					</div>
-					<div class="form-group">
-						<label for="brand_desc">Mô tả</label>
-						<textarea class="form-control" id="brand_desc" rows="3"></textarea>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-					<button class="btn btn-primary" type="submit">Thêm mới</button>
-				</div>
-			</form>
-		</div>
-	</div>
-
-	<!-- Modal Thêm tài khoản chi phí -->
-	<div class="modal fade" id="addExpenseAccountModal" tabindex="-1" role="dialog" aria-labelledby="addExpenseAccountLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<form class="modal-content">
-				<div class="modal-header bg-primary text-white">
-					<h5 class="modal-title" id="addExpenseAccountLabel">Thêm tài khoản chi phí</h5>
-					<button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">×</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="form-group">
-						<label for="account_title">Tiêu đề tài khoản</label>
-						<input type="text" class="form-control" id="account_title" required>
-					</div>
-					<div class="form-group">
-						<label for="account_amount">Số tiền</label>
-						<input type="number" class="form-control" id="account_amount" required>
-					</div>
-					<div class="form-group">
-						<label for="account_desc">Mô tả</label>
-						<textarea class="form-control" id="account_desc" rows="3"></textarea>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-					<button class="btn btn-primary" type="submit">Thêm mới</button>
-				</div>
-			</form>
-		</div>
-	</div>
-
-	<!-- Modal Ghi nhận bán mới -->
-	<div class="modal fade" id="addSaleModal" tabindex="-1" role="dialog" aria-labelledby="addSaleLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<form class="modal-content">
-				<div class="modal-header bg-primary text-white">
-					<h5 class="modal-title" id="addSaleLabel">Ghi nhận bán mới</h5>
-					<button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">×</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="form-group">
-						<label for="sale_product">Sản phẩm</label>
-						<input type="text" class="form-control" id="sale_product" required>
-					</div>
-					<div class="form-group">
-						<label for="sale_price">Giá bán</label>
-						<input type="number" class="form-control" id="sale_price" required>
-					</div>
-					<div class="form-group">
-						<label for="sale_desc">Mô tả</label>
-						<textarea class="form-control" id="sale_desc" rows="3"></textarea>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-					<button class="btn btn-primary" type="submit">Ghi nhận</button>
-				</div>
-			</form>
-		</div>
-	</div>
 </div>
+
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+			$('#viewProductModal').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget);
+				var modal = $(this);
+
+				// Lấy dữ liệu từ attribute data-*
+				modal.find('#detail_MaSanPham').text(button.attr('data-id'));
+				modal.find('#detail_TenSanPham').text(button.attr('data-tensanpham'));
+				modal.find('#detail_TenDanhMuc').text(button.attr('data-tendanhmuc'));
+				modal.find('#detail_GiaNhap').text(button.attr('data-gianhap'));
+				modal.find('#detail_GiaBan').text(button.attr('data-giaban'));
+				modal.find('#detail_SoLuong').text(button.attr('data-soluong'));
+				modal.find('#detail_NgayTao').text(button.attr('data-ngaytao'));
+
+				// Xử lý hiển thị Tình trạng
+				var tinhTrang = button.attr('data-tinhtrang');
+				var tinhTrangBadge = modal.find('#detail_TinhTrang');
+
+				if (tinhTrang === 'True') {
+					tinhTrangBadge
+						.removeClass('badge-secondary')
+						.addClass('badge-success')
+						.text('Hiện');
+				} else {
+					tinhTrangBadge
+						.removeClass('badge-success')
+						.addClass('badge-secondary')
+						.text('Ẩn');
+				}
+
+				// Xử lý hiển thị hình ảnh
+				var hinhAnh = button.attr('data-hinhanh');
+				var moTa = button.attr('data-mota');
+				modal.find('#detail_HinhAnh').attr('src', '/KhachHang/images/AnhSP/' + hinhAnh);
+				modal.find('#detail_MoTa').attr('src', '/KhachHang/images/AnhMoTa/' + moTa);
+			});
+
+
+			$('#editProductModal').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget);
+				var modal = $(this);
+
+				modal.find('#edit_MaSanPham').val(button.attr('data-id'));
+				modal.find('#edit_TenSanPham').val(button.attr('data-tensanpham'));
+				modal.find('#edit_MaDanhMuc').val(button.attr('data-madanhmuc'));
+
+				// Giá nhập & giá bán (vẫn giữ format có dấu phẩy nếu có)
+				var giaNhap = button.attr('data-gianhap');
+				var giaBan = button.attr('data-giaban');
+				modal.find('#edit_GiaNhap').val(Number(giaNhap).toLocaleString('vi-VN'));
+				modal.find('#edit_GiaBan').val(Number(giaBan).toLocaleString('vi-VN'));
+
+				modal.find('#edit_SoLuongConLai').val(button.attr('data-soluongconlai'));
+
+				// Xử lý tình trạng
+				var tinhTrang = button.attr('data-tinhtrang');
+				modal.find('#edit_TinhTrang').val(tinhTrang === 'True' ? 'True' : 'False');
+
+				// Hình ảnh & mô tả
+				var hinhAnh = button.attr('data-hinhanh');
+				var moTa = button.attr('data-mota');
+				modal.find('#edit_HinhAnh').attr('src', '/KhachHang/images/AnhSP/' + hinhAnh);
+				modal.find('#edit_MoTa').attr('src', '/KhachHang/images/AnhMoTa/' + moTa);
+			});
+
+			$('#deleteProductModal').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget);
+				var modal = $(this);
+				var id = button.attr('data-id');
+				modal.find('#delete_MaSanPham').val(id);
+			});
+
+		});
+		$(document).ready(function() {
+			$(document).on('submit', '#editProductForm', function (e) {
+				var giaBanInput = $('#edit_GiaBan');
+				var giaNhapInput = $('#edit_GiaNhap');
+				giaBanInput.val(giaBanInput.val().replace(/\./g, '').trim());
+				giaNhapInput.val(giaNhapInput.val().replace(/\./g, '').trim());
+			});
+		});
+	</script>
+}

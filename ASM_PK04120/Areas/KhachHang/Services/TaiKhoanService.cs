@@ -19,6 +19,12 @@ namespace ASM_PK04120.Areas.KhachHang.Services
 
             if (user != null && user.MatKhau == viewModel.MatKhau)
             {
+                if (user!.TrangThai == 0)
+                {
+                    // Trả về người dùng với trạng thái đặc biệt để controller xử lý riêng
+                    user.HoTen = "KhoaTK";
+                    return user;
+                }
                 return user; // Đăng nhập thành công, trả về thông tin người dùng
             }
 

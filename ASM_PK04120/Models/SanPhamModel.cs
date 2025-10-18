@@ -34,15 +34,15 @@ namespace ASM_PK04120.Models
         [Required]
         public DateTime NgayTao { get; set; }
 
-        public string? TinhTrang { get; set; }
+        public bool TinhTrang { get; set; }
 
         // Navigation property: Một sản phẩm thuộc về một danh mục
         [ForeignKey("MaDanhMuc")]
-        public required virtual DanhMucModel DanhMuc { get; set; }
+        public virtual DanhMucModel? DanhMuc { get; set; }
 
         // Navigation property: Một sản phẩm có trong nhiều chi tiết đơn hàng
-        public required virtual ICollection<ChiTietDonHangModel> ChiTietDonHangs { get; set; }
+        public virtual ICollection<ChiTietDonHangModel>? ChiTietDonHangs { get; set; }
 
-        public required virtual ICollection<GioHangModel> GioHangs { get; set; }
+        public virtual ICollection<GioHangModel>? GioHangs { get; set; }
     }
 }

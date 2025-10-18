@@ -445,3 +445,108 @@ body.sidebar-toggled footer.sticky-footer {
 }
 
 
+/* Phân trang - Container chính */
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 20px 0;
+    margin: 30px 0;
+    gap: 5px;
+}
+
+    /* Mục phân trang */
+    .pagination .page-item {
+        display: inline-block;
+    }
+
+    /* Link phân trang */
+    .pagination .page-link {
+        display: inline-block;
+        padding: 8px 12px;
+        min-width: 40px;
+        text-align: center;
+        border: 1px solid #dee2e6;
+        color: #0d6efd;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border-radius: 4px;
+        font-weight: 500;
+        background-color: #fff;
+    }
+
+        /* Hover cho link */
+        .pagination .page-link:hover {
+            background-color: #e9ecef;
+            color: #0b5ed7;
+            border-color: #0b5ed7;
+        }
+
+    /* Trang hiện tại - active */
+    .pagination .page-item.active .page-link {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        color: #fff;
+        cursor: default;
+    }
+
+        .pagination .page-item.active .page-link:hover {
+            background-color: #0b5ed7;
+            border-color: #0b5ed7;
+        }
+
+    /* Trang bị vô hiệu hóa - disabled */
+    .pagination .page-item.disabled .page-link {
+        color: #6c757d;
+        pointer-events: none;
+        background-color: #e9ecef;
+        border-color: #dee2e6;
+        cursor: not-allowed;
+        opacity: 0.65;
+    }
+
+        .pagination .page-item.disabled .page-link:hover {
+            background-color: #e9ecef;
+            border-color: #dee2e6;
+            color: #6c757d;
+        }
+
+/* Responsive - Tablet và Mobile */
+@media (max-width: 768px) {
+    .pagination {
+        gap: 3px;
+        padding: 15px 0;
+    }
+
+        .pagination .page-link {
+            padding: 6px 10px;
+            min-width: 36px;
+            font-size: 14px;
+        }
+}
+
+/* Mobile nhỏ */
+@media (max-width: 480px) {
+    .pagination {
+        gap: 2px;
+    }
+
+        .pagination .page-link {
+            padding: 5px 8px;
+            min-width: 32px;
+            font-size: 12px;
+        }
+
+        /* Ẩn số trang (giữ lại Trước/Sau) */
+        .pagination .page-item:not(.disabled):not(:first-child):not(:last-child) {
+            display: none;
+        }
+}
+
+/* Hiệu ứng mặt */
+.pagination .page-link {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.pagination .page-item.active .page-link {
+    box-shadow: 0 2px 6px rgba(13, 110, 253, 0.3);
+}

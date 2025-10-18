@@ -12,9 +12,6 @@
 <div id="content-wrapper">
     <div class="container-fluid">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a href="#">Trang chủ</a>
-            </li>
             <li class="breadcrumb-item active">Quản lý khách hàng</li>
         </ol>
 
@@ -32,7 +29,7 @@
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered" id="customerTable" width="100%" cellspacing="0">
-                        <thead>
+                        <thead class="text-center">
                             <tr>
                                 <th>Họ tên</th>
                                 <th>Tài khoản</th>
@@ -44,7 +41,7 @@
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="text-center">
                             @* --- VÒNG LẶP HIỂN THỊ DỮ LIỆU THẬT TỪ VIEWMODEL --- *@
                             @if (Model.DanhSachKhachHang.Any())
                             {
@@ -141,27 +138,27 @@
 
                         <div class="form-group">
                             <label>Tài khoản</label>
-                            <input name="TaiKhoan" class="form-control" required>
+                            <input name="TaiKhoan" class="form-control" required minlength="4" maxlength="100" placeholder="Nhập tên tài khoản" />
                         </div>
                         <div class="form-group">
                             <label>Mật khẩu</label>
-                            <input name="MatKhau" type="password" class="form-control" required>
+                            <input name="MatKhau" type="password" class="form-control" required minlength="6" maxlength="255" placeholder="Nhập mật khẩu" />
                         </div>
                         <div class="form-group">
                             <label>Họ tên</label>
-                            <input name="HoTen" class="form-control" required>
+                            <input name="HoTen" class="form-control" required minlength="2" maxlength="255" placeholder="Nhập họ tên đầy đủ" />
                         </div>
                         <div class="form-group">
                             <label>Email</label>
-                            <input name="Email" type="email" class="form-control" required>
+                            <input name="Email" type="email" class="form-control" required maxlength="255" placeholder="Nhập địa chỉ email" />
                         </div>
                         <div class="form-group">
                             <label>Số điện thoại</label>
-                            <input name="SoDienThoai" class="form-control">
+                            <input name="SoDienThoai" class="form-control" pattern="^0[0-9]{9}$" placeholder="VD: 0912345678" title="Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số" />
                         </div>
                         <div class="form-group">
                             <label>Địa chỉ</label>
-                            <input name="DiaChi" class="form-control">
+                            <input name="DiaChi" class="form-control" maxlength="500" placeholder="Nhập địa chỉ khách hàng" />
                         </div>
                         <div class="form-group">
                             <label>Trạng thái</label>
@@ -176,7 +173,6 @@
                         <button class="btn btn-primary" type="submit">Thêm mới</button>
                     </div>
                 </form>
-                @* --- KẾT THÚC NÂNG CẤP --- *@
             </div>
         </div>
         <!-- Modal Sửa khách hàng -->
@@ -194,27 +190,27 @@
                             <input type="hidden" id="editMaNguoiDung" name="MaNguoiDung" />
                             <div class="form-group">
                                 <label for="editTaiKhoan">Tài khoản</label>
-                                <input type="text" class="form-control" id="editTaiKhoan" name="TaiKhoan" required>
+                                <input type="text" class="form-control" id="editTaiKhoan" name="TaiKhoan" readonly/>
                             </div>
                             <div class="form-group">
                                 <label for="editMatKhau">Mật khẩu</label>
-                                <input type="password" class="form-control" id="editMatKhau" name="MatKhau" required>
+                                <input type="password" class="form-control" id="editMatKhau" name="MatKhau" required minlength="6" maxlength="255" placeholder="Nhập mật khẩu" />
                             </div>
                             <div class="form-group">
                                 <label for="editHoTen">Họ tên</label>
-                                <input type="text" class="form-control" id="editHoTen" name="HoTen" required>
+                                <input type="text" class="form-control" id="editHoTen" name="HoTen" required minlength="2" maxlength="255" placeholder="Nhập họ tên đầy đủ" />
                             </div>
                             <div class="form-group">
                                 <label for="editEmail">Email</label>
-                                <input type="email" class="form-control" id="editEmail" name="Email" required>
+                                <input type="email" class="form-control" id="editEmail" name="Email" required maxlength="255" placeholder="Nhập địa chỉ email" />
                             </div>
                             <div class="form-group">
                                 <label for="editSDT">Số điện thoại</label>
-                                <input type="text" class="form-control" id="editSDT" name="SoDienThoai" required>
+                                <input type="text" class="form-control" id="editSDT" name="SoDienThoai" pattern="^0[0-9]{9}$" placeholder="VD: 0912345678" title="Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số" />
                             </div>
                             <div class="form-group">
                                 <label for="editDiaChi">Địa chỉ</label>
-                                <input type="text" class="form-control" id="editDiaChi" name="DiaChi">
+                                <input type="text" class="form-control" id="editDiaChi" name="DiaChi" maxlength="500" placeholder="Nhập địa chỉ khách hàng" />
                             </div>
                             <div class="form-group">
                                 <label for="editTrangThai">Trạng thái</label>

@@ -1,4 +1,5 @@
-﻿using ASM_PK04120.Models;
+﻿using ASM_PK04120.Areas.KhachHang.Models;
+using ASM_PK04120.Models;
 
 namespace ASM_PK04120.Areas.KhachHang.Services
 {
@@ -8,9 +9,9 @@ namespace ASM_PK04120.Areas.KhachHang.Services
         Task<List<GioHangModel>> LayGioHang(int maNguoiDung);
 
         // Thêm một sản phẩm vào giỏ của người dùng
-        Task ThemVaoGio(int maNguoiDung, int maSanPham, int soLuong);
+        Task<KetQuaDichVu> ThemVaoGio(int maNguoiDung, int maSanPham, int soLuong);
 
         // Xóa một món hàng khỏi giỏ (dựa vào mã giỏ hàng)
-        Task XoaKhoiGio(int maGioHang);
+        Task<KetQuaDichVu> XoaKhoiGio(int maGioHang);
     }
 }
