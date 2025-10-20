@@ -1,4 +1,5 @@
-﻿@{
+﻿@model ASM_PK04120.Areas.Admin.Models.ThongKeViewModel
+@{
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Thống kê";
 }
@@ -13,8 +14,7 @@
                 <div class="card stat-card blue h-100">
                     <div class="card-body">
                         <div class="stat-label">Doanh thu tháng này</div>
-                        <div class="stat-value">125.5M</div>
-                        <small class="text-success"><i class="fa fa-arrow-up"></i> 12.5% so với tháng trước</small>
+                        <div class="stat-value">@Model.TongQuan?.DoanhThuThangNay.ToString("N0") VNĐ</div>
                     </div>
                 </div>
             </div>
@@ -22,8 +22,7 @@
                 <div class="card stat-card green h-100">
                     <div class="card-body">
                         <div class="stat-label">Đơn hàng tháng này</div>
-                        <div class="stat-value">1,245</div>
-                        <small class="text-success"><i class="fa fa-arrow-up"></i> 8.3% so với tháng trước</small>
+                        <div class="stat-value">@Model.TongQuan?.DonHangThangNay</div>
                     </div>
                 </div>
             </div>
@@ -31,8 +30,7 @@
                 <div class="card stat-card orange h-100">
                     <div class="card-body">
                         <div class="stat-label">Khách hàng mới</div>
-                        <div class="stat-value">342</div>
-                        <small class="text-success"><i class="fa fa-arrow-up"></i> 15.2% so với tháng trước</small>
+                        <div class="stat-value">@Model.TongQuan?.KhachHangMoi</div>
                     </div>
                 </div>
             </div>
@@ -40,8 +38,7 @@
                 <div class="card stat-card purple h-100">
                     <div class="card-body">
                         <div class="stat-label">Giá trị TB đơn hàng</div>
-                        <div class="stat-value">100.8K</div>
-                        <small class="text-danger"><i class="fa fa-arrow-down"></i> 3.2% so với tháng trước</small>
+                        <div class="stat-value">@Model.TongQuan?.GiaTriTrungBinh.ToString("N0")</div>
                     </div>
                 </div>
             </div>
@@ -57,7 +54,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <canvas id="overviewChart" width="100%" height="40"></canvas>
+                <canvas id="overviewChart" height="40"></canvas>
             </div>
         </div>
 
@@ -73,7 +70,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <canvas id="topProductsChart" height="250"></canvas>
+                        <canvas id="topProductsChart" style="height:250px;"></canvas>
                     </div>
                     <div class="col-md-6">
                         <div class="table-responsive">
@@ -106,7 +103,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-7">
-                        <canvas id="categoryPieChart" height="250"></canvas>
+                        <canvas id="categoryPieChart" style="height:250px;"></canvas>
                     </div>
                     <div class="col-md-5">
                         <div class="table-responsive">
@@ -153,3 +150,29 @@
 
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // --- ĐẨY DỮ LIỆU TỪ SERVER VÀO dashboardData ---
+
+        var dashboardData = {
+            overview: {
+                // nếu sau này bạn có dữ liệu biểu đồ doanh thu theo ngày/tháng/năm từ server
+                day: @Html.Raw(Json.Serialize(Model.DoanhThuNgays)),
+                month: @Html.Raw(Json.Serialize(Model.DoanhThuThangs)),
+                year: @Html.Raw(Json.Serialize(Model.DoanhThuNams))
+            },
+            topProducts: {
+                week: @Html.Raw(Json.Serialize(Model.TopSanPhamWeek)),
+                month: @Html.Raw(Json.Serialize(Model.TopSanPhamMonth)),
+                year: @Html.Raw(Json.Serialize(Model.TopSanPhamYear))
+            },
+            categories: {
+                revenue: @Html.Raw(Json.Serialize(Model.DoanhThuDanhMuc)),
+                quantity: @Html.Raw(Json.Serialize(Model.SoLuongBanDanhMuc))
+            },
+            dailyRevenue: @Html.Raw(Json.Serialize(Model.DoanhThuNgays))
+        };
+    </script>
+    <script src="~/admin/js/thongke.js"></script>
+}

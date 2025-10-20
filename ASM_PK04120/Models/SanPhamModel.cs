@@ -38,11 +38,11 @@ namespace ASM_PK04120.Models
 
         // Navigation property: Một sản phẩm thuộc về một danh mục
         [ForeignKey("MaDanhMuc")]
-        public virtual DanhMucModel? DanhMuc { get; set; }
+        public virtual DanhMucModel DanhMuc { get; set; } = null!;
 
         // Navigation property: Một sản phẩm có trong nhiều chi tiết đơn hàng
-        public virtual ICollection<ChiTietDonHangModel>? ChiTietDonHangs { get; set; }
+        public virtual ICollection<ChiTietDonHangModel> ChiTietDonHangs { get; set; } = new List<ChiTietDonHangModel>();
 
-        public virtual ICollection<GioHangModel>? GioHangs { get; set; }
+        public virtual ICollection<GioHangModel> GioHangs { get; set; } = new List<GioHangModel>();
     }
 }

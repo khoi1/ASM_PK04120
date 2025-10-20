@@ -1,210 +1,188 @@
-﻿// --- DỮ LIỆU MẪU ---
-var topProductsData = {
-    week: [
-        { name: 'iPhone 14 Pro', quantity: 45, revenue: 540000000 },
-        { name: 'Samsung Galaxy S23', quantity: 38, revenue: 380000000 },
-        { name: 'MacBook Air M2', quantity: 25, revenue: 625000000 },
-        { name: 'iPad Pro 11"', quantity: 32, revenue: 288000000 },
-        { name: 'AirPods Pro 2', quantity: 67, revenue: 167500000 }
-    ],
-    month: [
-        { name: 'iPhone 14 Pro', quantity: 185, revenue: 2220000000 },
-        { name: 'Samsung Galaxy S23', quantity: 156, revenue: 1560000000 },
-        { name: 'MacBook Air M2', quantity: 98, revenue: 2450000000 },
-        { name: 'iPad Pro 11"', quantity: 142, revenue: 1278000000 },
-        { name: 'AirPods Pro 2', quantity: 278, revenue: 695000000 }
-    ],
-    year: [
-        { name: 'iPhone 14 Pro', quantity: 2145, revenue: 25740000000 },
-        { name: 'Samsung Galaxy S23', quantity: 1823, revenue: 18230000000 },
-        { name: 'MacBook Air M2', quantity: 1156, revenue: 28900000000 },
-        { name: 'iPad Pro 11"', quantity: 1687, revenue: 15183000000 },
-        { name: 'AirPods Pro 2', quantity: 3421, revenue: 8552500000 }
-    ]
-};
+﻿// Dữ liệu từ server được đẩy vào đây
+var dashboardData = window.dashboardData || { /* ... */ };
 
-var categoryData = {
-    revenue: [
-        { name: 'Điện thoại', value: 5450000000 },
-        { name: 'Laptop', value: 3250000000 },
-        { name: 'Máy tính bảng', value: 1850000000 },
-        { name: 'Phụ kiện', value: 1100000000 },
-        { name: 'Thiết bị khác', value: 550000000 }
-    ],
-    quantity: [
-        { name: 'Điện thoại', value: 450 },
-        { name: 'Laptop', value: 120 },
-        { name: 'Máy tính bảng', value: 210 },
-        { name: 'Phụ kiện', value: 850 },
-        { name: 'Thiết bị khác', value: 95 }
-    ]
-};
+// Các biến toàn cục cho biểu đồ để có thể cập nhật
+var overviewChartInstance;
+var topProductsChartInstance;
+var categoryPieChartInstance;
 
 var chartColors = [
-    'rgba(255, 99, 132, 0.8)',
-    'rgba(54, 162, 235, 0.8)',
-    'rgba(255, 206, 86, 0.8)',
-    'rgba(75, 192, 192, 0.8)',
-    'rgba(153, 102, 255, 0.8)',
-    'rgba(255, 159, 64, 0.7)'
+    'rgba(54, 162, 235, 0.8)', 'rgba(255, 99, 132, 0.8)',
+    'rgba(255, 206, 86, 0.8)', 'rgba(75, 192, 192, 0.8)',
+    'rgba(153, 102, 255, 0.8)'
 ];
 
-// Biến toàn cục cho các biểu đồ
-var topProductsChart, categoryPieChart, overviewChart;
-
-// --- CÁC HÀM TIỆN ÍCH ---
 function formatCurrency(number) {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number);
 }
 
-// --- HÀM CẬP NHẬT CHO CÁC BIỂU ĐỒ ---
-
-// Hàm cập nhật cho biểu đồ tổng quan doanh thu (Ngày/Tháng/Năm)
-function updateOverviewChart(period) {
-    $('#overviewChart').parent().parent().find('.period-tabs .btn').removeClass('active');
-    if (period === 'day') $('#btn-day').addClass('active');
-    if (period === 'month') $('#btn-month-overview').addClass('active');
-    if (period === 'year') $('#btn-year-overview').addClass('active');
-    if (overviewChart) {
-        overviewChart.destroy();
-    }
-    var ctx = document.getElementById('overviewChart').getContext('2d');
-    var config = {};
-    switch (period) {
-        case 'day':
-            var trendData = [];
-            var trendLabels = [];
-            for (var i = 29; i >= 0; i--) {
-                var date = new Date();
-                date.setDate(date.getDate() - i);
-                trendLabels.push(date.getDate() + '/' + (date.getMonth() + 1));
-                trendData.push(Math.floor(Math.random() * 5000000) + 5000000);
-            }
-            config = {
-                type: 'line',
-                data: { labels: trendLabels, datasets: [{ label: 'Doanh thu', data: trendData, backgroundColor: 'rgba(75, 192, 192, 0.2)', borderColor: 'rgba(75, 192, 192, 1)', borderWidth: 2, fill: true, tension: 0.4 }] },
-                options: { responsive: true, scales: { yAxes: [{ ticks: { beginAtZero: false, callback: function (value) { return (value / 1000000).toFixed(1) + 'M'; } } }] }, legend: { display: false } }
-            };
-            break;
-        case 'month':
-            config = {
-                type: 'bar',
-                data: { labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'], datasets: [{ label: 'Doanh thu (triệu VNĐ)', data: [85, 92, 78, 105, 98, 115, 125.5, 130, 142, 155, 150, 165], backgroundColor: 'rgba(54, 162, 235, 0.7)', borderColor: 'rgba(54, 162, 235, 1)', borderWidth: 1 }] },
-                options: { responsive: true, scales: { yAxes: [{ ticks: { beginAtZero: true, callback: function (value) { return value + 'M'; } } }] }, legend: { display: false } }
-            };
-            break;
-        case 'year':
-            config = {
-                type: 'bar',
-                data: { labels: ['2022', '2023', '2024', '2025 (dự kiến)'], datasets: [{ label: 'Doanh thu (tỷ VNĐ)', data: [12.5, 15.2, 18.1, 22.5], backgroundColor: 'rgba(153, 102, 255, 0.7)', borderColor: 'rgba(153, 102, 255, 1)', borderWidth: 1 }] },
-                options: { responsive: true, scales: { yAxes: [{ ticks: { beginAtZero: true, callback: function (value) { return value + ' Tỷ'; } } }] }, legend: { display: false } }
-            };
-            break;
-    }
-    overviewChart = new Chart(ctx, config);
-}
-
-// Hàm cập nhật top sản phẩm
-function updateTopProducts(period) {
-    $('#topProductsChart').parent().parent().parent().parent().find('.period-tabs .btn').removeClass('active');
-    $('#btn-' + period).addClass('active');
-    var data = topProductsData[period];
-    var tableBody = $('#topProductsTableBody');
-    tableBody.empty();
-    data.forEach(function (product, index) {
-        var row = `<tr><td>${index + 1}</td><td>${product.name}</td><td>${product.quantity.toLocaleString('vi-VN')}</td><td>${formatCurrency(product.revenue)}</td></tr>`;
-        tableBody.append(row);
-    });
-    topProductsChart.data.labels = data.map(p => p.name);
-    topProductsChart.data.datasets[0].data = data.map(p => p.revenue);
-    topProductsChart.update();
-}
-
-// --- Hàm cập nhật cho biểu đồ Danh mục ---
-function updateCategoryChart(period) {
-    $('#categoryPieChart').parent().parent().parent().parent().find('.period-tabs .btn').removeClass('active');
-    if (period === 'revenue') $('#btn-cat-revenue').addClass('active');
-    if (period === 'quantity') $('#btn-cat-quantity').addClass('active');
-
-    var data = categoryData[period];
-    var tableBody = $('#categoryTableBody');
-    var tableHeader = $('#category-table-header-value');
-
-    tableBody.empty();
-
-    if (period === 'revenue') {
-        tableHeader.text('Doanh Thu');
-        data.forEach(function (cat, index) {
-            var row = `<tr><td>${index + 1}</td><td>${cat.name}</td><td>${formatCurrency(cat.value)}</td></tr>`;
-            tableBody.append(row);
-        });
-    } else {
-        tableHeader.text('Số Lượng Bán');
-        data.forEach(function (cat, index) {
-            var row = `<tr><td>${index + 1}</td><td>${cat.name}</td><td>${cat.value.toLocaleString('vi-VN')}</td></tr>`;
-            tableBody.append(row);
-        });
-    }
-
-    categoryPieChart.data.labels = data.map(c => c.name);
-    categoryPieChart.data.datasets[0].data = data.map(c => c.value);
-    categoryPieChart.update();
-}
-
-// --- KHỞI TẠO CÁC BIỂU ĐỒ KHI TẢI TRANG ---
-$(document).ready(function () {
-
-    // 1. Biểu đồ danh mục (khởi tạo)
-    var ctx3 = document.getElementById('categoryPieChart').getContext('2d');
-    categoryPieChart = new Chart(ctx3, {
-        type: 'doughnut',
-        data: {
-            labels: [], // Dữ liệu sẽ được điền bởi hàm update
-            datasets: [{
-                data: [],
-                backgroundColor: chartColors
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            legend: {
-                position: 'right'
-            }
-        }
-    });
-
-    // 2. Biểu đồ và bảng Top sản phẩm
-    var ctx6 = document.getElementById('topProductsChart').getContext('2d');
-    topProductsChart = new Chart(ctx6, {
-        type: 'doughnut',
-        data: { labels: [], datasets: [{ data: [], backgroundColor: chartColors }] },
-        options: { responsive: true, maintainAspectRatio: false, legend: { position: 'bottom', labels: { boxWidth: 12 } }, cutoutPercentage: 40 }
-    });
-
-    // 3. Khởi tạo DataTable cho bảng doanh thu ngày
-    var dailyRevenueTableBody = $('#dailyRevenueTable tbody');
-    var dailyData = [
-        ['20/07/2025', 12000000, 15, 800000, '<span class="badge badge-success">Doanh thu cao nhất tuần</span>'],
-        ['19/07/2025', 8500000, 10, 850000, ''],
-        ['18/07/2025', 9200000, 12, 766667, ''],
-        ['17/07/2025', 7800000, 9, 866667, ''],
-        ['16/07/2025', 10500000, 14, 750000, ''],
-        ['15/07/2025', 6200000, 8, 775000, '<span class="badge badge-warning">Cuối tuần</span>'],
-        ['14/07/2025', 5800000, 7, 828571, '<span class="badge badge-warning">Cuối tuần</span>']
-    ];
-
-    dailyData.forEach(function (row) {
-        dailyRevenueTableBody.append(`<tr><td>${row[0]}</td><td>${formatCurrency(row[1])}</td><td>${row[2]}</td><td>${formatCurrency(row[3])}</td><td>${row[4]}</td></tr>`);
-    });
-
-    $('#dailyRevenueTable').DataTable({
-        "order": [[0, "desc"]],
-        "language": { "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/Vietnamese.json" }
-    });
-
-    // --- TẢI DỮ LIỆU MẶC ĐỊNH ---
+// === KHỞI TẠO DASHBOARD BAN ĐẦU ===
+function initDashboard(data) {
+    // Khởi tạo với dữ liệu mặc định
     updateOverviewChart('day');
     updateTopProducts('week');
     updateCategoryChart('revenue');
+    initDailyRevenueTable(data.dailyRevenue);
+}
+
+// === BIỂU ĐỒ DOANH THU TỔNG QUAN ===
+function updateOverviewChart(period) {
+    var dataForPeriod = dashboardData.overview[period] || [];
+    var labels = [];
+    var values = [];
+
+    // --- SỬA LOGIC LẤY NHÃN VÀ GIÁ TRỊ ---
+    if (period === 'day') {
+        labels = dataForPeriod.map(item => new Date(item.ngay).toLocaleDateString('vi-VN'));
+        values = dataForPeriod.map(item => item.tongDoanhThu);
+    } else { // period === 'month' hoặc 'year'
+        labels = dataForPeriod.map(item => item.thoiGian); // Lấy trực tiếp "Tháng X" hoặc "YYYY"
+        values = dataForPeriod.map(item => item.tongDoanhThu);
+    }
+    // ------------------------------------
+
+    const chartData = {
+        labels: labels,
+        datasets: [{
+            label: 'Doanh thu (VNĐ)',
+            data: values,
+            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    };
+
+    // Phần còn lại của hàm giữ nguyên (cập nhật hoặc tạo mới biểu đồ)
+    if (overviewChartInstance) {
+        overviewChartInstance.data = chartData;
+        overviewChartInstance.update();
+    } else {
+        const ctx = document.getElementById('overviewChart').getContext('2d');
+        overviewChartInstance = new Chart(ctx, { type: 'bar', data: chartData, options: { responsive: true, scales: { y: { beginAtZero: true } } } });
+    }
+
+    // Cập nhật nút active
+    $('#btn-day-overview, #btn-month-overview, #btn-year-overview').removeClass('active');
+    $(`#btn-${period}-overview`).addClass('active');
+}
+
+// === TOP SẢN PHẨM BÁN CHẠY ===
+function updateTopProducts(period) {
+    // period là 'week', 'month', hoặc 'year'
+    var dataForPeriod = dashboardData.topProducts[period] || [];
+
+    // Cập nhật biểu đồ tròn
+    const chartData = {
+        labels: dataForPeriod.map(p => p.tenSanPham),
+        datasets: [{ data: dataForPeriod.map(p => p.doanhThu), backgroundColor: chartColors }]
+    };
+
+    if (topProductsChartInstance) {
+        topProductsChartInstance.data = chartData;
+        topProductsChartInstance.update();
+    } else {
+        const ctx = document.getElementById('topProductsChart').getContext('2d');
+        topProductsChartInstance = new Chart(ctx, { type: 'doughnut', data: chartData, options: { responsive: true, legend: { position: 'bottom' } } });
+    }
+
+    // Cập nhật bảng dữ liệu
+    const tbody = $('#topProductsTableBody');
+    tbody.empty();
+    if (dataForPeriod.length === 0) {
+        tbody.append('<tr><td colspan="4" class="text-center">Không có dữ liệu cho khoảng thời gian này.</td></tr>');
+    } else {
+        dataForPeriod.forEach((p, i) => {
+            tbody.append(`<tr>
+                <td>${i + 1}</td>
+                <td>${p.tenSanPham}</td>
+                <td>${p.soLuongBan.toLocaleString('vi-VN')}</td>
+                <td>${formatCurrency(p.doanhThu)}</td>
+            </tr>`);
+        });
+    }
+    // Cập nhật trạng thái active cho button
+    $('#btn-week, #btn-month, #btn-year').removeClass('active');
+    $(`#btn-${period}`).addClass('active');
+}
+
+// === THỐNG KÊ DANH MỤC ===
+function updateCategoryChart(type) {
+    // type là 'revenue' hoặc 'quantity'
+    var dataForType = dashboardData.categories[type] || [];
+    var isRevenue = type === 'revenue';
+
+    // Cập nhật biểu đồ tròn
+    const chartData = {
+        labels: dataForType.map(c => c.tenDanhMuc),
+        datasets: [{ data: dataForType.map(c => c.giaTri), backgroundColor: chartColors }]
+    };
+    if (categoryPieChartInstance) {
+        categoryPieChartInstance.data = chartData;
+        categoryPieChartInstance.update();
+    } else {
+        const ctx = document.getElementById('categoryPieChart').getContext('2d');
+        categoryPieChartInstance = new Chart(ctx, { type: 'doughnut', data: chartData, options: { responsive: true, legend: { position: 'right' } } });
+    }
+
+    // Cập nhật bảng và header
+    $('#category-table-header-value').text(isRevenue ? 'Doanh thu' : 'Số lượng bán');
+    const tbody = $('#categoryTableBody');
+    tbody.empty();
+    dataForType.forEach((c, i) => {
+        tbody.append(`<tr>
+            <td>${i + 1}</td>
+            <td>${c.tenDanhMuc}</td>
+            <td>${isRevenue ? formatCurrency(c.giaTri) : c.giaTri.toLocaleString('vi-VN')}</td>
+        </tr>`);
+    });
+
+    // Cập nhật trạng thái active cho button
+    $('#btn-cat-revenue, #btn-cat-quantity').removeClass('active');
+    $(`#btn-cat-${type}`).addClass('active');
+}
+
+// --- BẢNG DOANH THU NGÀY ---
+function initDailyRevenueTable(dailyData) {
+    const tbody = $('#dailyRevenueTable tbody');
+    tbody.empty(); // Xóa dữ liệu cũ
+
+    // 1. Đổ dữ liệu vào bảng
+    dailyData.forEach(row => {
+        const dateObj = new Date(row.ngay);
+        // Định dạng ngày theo dd/MM/yyyy
+        const formattedDate = dateObj.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+        tbody.append(`<tr>
+            <td>${formattedDate}</td>
+            <td>${formatCurrency(row.tongDoanhThu)}</td>
+            <td>${row.soDonHang}</td>
+            <td>${formatCurrency(row.giaTriTrungBinh)}</td>
+            <td>${row.ghiChu || ''}</td>
+        </tr>`);
+    });
+
+    // 2. Dạy DataTables cách đọc định dạng ngày Việt Nam (CHỈ CẦN GỌI MỘT LẦN KHI KHỞI TẠO)
+    // Kiểm tra xem DataTables đã được khởi tạo cho bảng này chưa
+    if (!$.fn.DataTable.isDataTable('#dailyRevenueTable')) {
+        // Chỉ cần gọi $.fn.dataTable.moment một lần duy nhất trước khi khởi tạo DataTable lần đầu
+        $.fn.dataTable.moment('DD/MM/YYYY');
+
+        // 3. Khởi tạo DataTables SAU KHI đổ dữ liệu
+        $('#dailyRevenueTable').DataTable({
+            order: [[0, 'desc']], // Sắp xếp theo cột Ngày (index 0) giảm dần
+            language: { url: '//cdn.datatables.net/plug-ins/1.10.21/i18n/Vietnamese.json' }
+            // Thêm các tùy chọn khác nếu bạn muốn (paging, searching...)
+            // "paging": true,
+            // "searching": true
+        });
+    } else {
+        // Nếu DataTable đã tồn tại, chỉ cần vẽ lại bảng với dữ liệu mới
+        $('#dailyRevenueTable').DataTable().clear().rows.add(tbody.find('tr')).draw();
+        // Lưu ý: Đoạn else này thường không cần thiết vì chúng ta chỉ gọi init một lần.
+        // Nhưng để đây phòng trường hợp bạn muốn cập nhật bảng sau này.
+    }
+}
+// --- KHỞI TẠO ---
+$(function () {
+    initDashboard(dashboardData);
 });

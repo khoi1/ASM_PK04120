@@ -32,6 +32,7 @@ namespace ASM_PK04120
             builder.Services.AddScoped<IGioHangService, GioHangService>();
             builder.Services.AddScoped<IQuanLyKhachHangService, QuanLyKhachHangService>();
             builder.Services.AddScoped<IQuanLySanPhamService, QuanLySanPhamService>();
+            builder.Services.AddScoped<IThongKeService, ThongKeService>();
 
 
 

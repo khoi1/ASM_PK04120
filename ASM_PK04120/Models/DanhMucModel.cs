@@ -14,6 +14,6 @@ namespace ASM_PK04120.Models
         public required string TenDanhMuc { get; set; }
 
         // Navigation property: Một danh mục có nhiều sản phẩm
-        public virtual ICollection<SanPhamModel>? SanPhams { get; set; }
+        public virtual ICollection<SanPhamModel> SanPhams { get; set; } = new List<SanPhamModel>();
     }
 }
