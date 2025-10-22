@@ -8,6 +8,8 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 	<title>Admin - Baka Coffee</title>
+	<link rel="icon" type="image/png" href="~/KhachHang/images/baca_coffee_favicon.png">
+
 	<link href="~/Admin/css/bootstrap.css" rel="stylesheet">
 	<link href="~/Admin/css/font-awesome.css" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -18,7 +20,7 @@
 <body id="page-top">
 	@await Html.PartialAsync("_ThongBao")
 	<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
-		<a class="navbar-brand mr-1" href="index.html">BaKa Coffee</a>
+		<a class="navbar-brand mr-1" asp-controller="ThongKe" asp-action="Index">BaKa Coffee</a>
 		<button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
 			<i class="fa fa-bars"></i>
 		</button>
