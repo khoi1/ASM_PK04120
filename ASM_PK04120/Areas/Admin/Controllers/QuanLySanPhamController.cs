@@ -32,23 +32,15 @@ namespace ASM_PK04120.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SanPhamModel sanPham, IFormFile? hinhAnh, IFormFile? moTaAnh)
         {
-            if (ModelState.IsValid)
+            var ketQua = await _quanLySanPhamService.ThemSanPham(sanPham, hinhAnh, moTaAnh);
+            if (ketQua)
             {
-                var ketQua = await _quanLySanPhamService.ThemSanPham(sanPham, hinhAnh, moTaAnh);
-                if (ketQua)
-                {
-                    TempData["ThongBao"] = "Thêm sản phẩm mới thành công!";
-                    TempData["LoaiThongBao"] = "success";
-                }
-                else
-                {
-                    TempData["ThongBao"] = "Thêm sản phẩm thất bại.";
-                    TempData["LoaiThongBao"] = "error";
-                }
+                TempData["ThongBao"] = "Thêm sản phẩm mới thành công!";
+                TempData["LoaiThongBao"] = "success";
             }
             else
             {
-                TempData["ThongBao"] = "Dữ liệu không hợp lệ, vui lòng kiểm tra lại.";
+                TempData["ThongBao"] = "Thêm sản phẩm thất bại.";
                 TempData["LoaiThongBao"] = "error";
             }
             return RedirectToAction(nameof(Index)); // Luôn tải lại trang Index
@@ -58,29 +50,16 @@ namespace ASM_PK04120.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(SanPhamModel sanPham, IFormFile? hinhAnhMoi, IFormFile? moTaAnhMoi)
         {
-            if (ModelState.IsValid)
+            var ketQua = await _quanLySanPhamService.CapNhatSanPham(sanPham, hinhAnhMoi, moTaAnhMoi);
+            if (ketQua)
             {
-                var ketQua = await _quanLySanPhamService.CapNhatSanPham(sanPham, hinhAnhMoi, moTaAnhMoi);
-                if (ketQua)
-                {
-                    TempData["ThongBao"] = "Cập nhật sản phẩm thành công!";
-                    TempData["LoaiThongBao"] = "success";
-                }
-                else
-                {
-                    TempData["ThongBao"] = "Cập nhật sản phẩm thất bại.";
-                    TempData["LoaiThongBao"] = "error";
-                }
+                TempData["ThongBao"] = "Cập nhật sản phẩm thành công!";
+                TempData["LoaiThongBao"] = "success";
             }
             else
             {
-                TempData["ThongBao"] = "Dữ liệu không hợp lệ.";
+                TempData["ThongBao"] = "Cập nhật sản phẩm thất bại.";
                 TempData["LoaiThongBao"] = "error";
-            }
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                TempData["ThongBaoChiTiet"] = string.Join("; ", errors);
             }
             return RedirectToAction(nameof(Index));
         }

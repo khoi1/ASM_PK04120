@@ -35,8 +35,6 @@
 								<option value="">-- Chọn tình trạng --</option>
 								<option value="Hết hàng" selected="@(Model.SapXep == "Hết hàng")">Hết hàng</option>
 								<option value="Sắp hết hàng" selected="@(Model.SapXep == "Sắp hết hàng")">Sắp hết hàng</option>
-								<option value="Tên từ a-z" selected="@(Model.SapXep == "Tên từ a-z")">Tên từ a-z</option>
-								<option value="Tên từ z-a" selected="@(Model.SapXep == "Tên từ z-a")">Tên từ z-a</option>
 							</select>
 						</div>
 						<button type="submit" class="btn btn-primary ml-2"><i class="fa fa-search"></i> Tìm</button>
@@ -205,11 +203,12 @@
 						</div>
 						<div class="form-group">
 							<label for="import_price">Giá nhập</label>
-							<input type="text" class="form-control" id="import_price" name="GiaNhap" required>
+							<input type="text" class="form-control price-input" id="import_price" name="GiaNhap" required pattern="^[0-9.,]+$" title="Giá phải lớn hơn hoặc bằng 0">
 						</div>
 						<div class="form-group">
 							<label for="price">Giá bán</label>
-							<input type="text" class="form-control" id="price" name="GiaBan" required>
+							<input type="text" class="form-control price-input" id="price" name="GiaBan" required pattern="^[0-9.,]+$" title="Giá phải lớn hơn hoặc bằng 0">
+							<div class="text-danger thong_bao_loi" style="font-size: 13px;"></div>
 						</div>
 						<div class="form-group">
 							<label for="quantity">Số lượng còn lại</label>
@@ -268,11 +267,12 @@
 						</div>
 						<div class="form-group">
 							<label for="edit_GiaNhap">Giá nhập</label>
-							<input type="number" class="form-control" id="edit_GiaNhap" name="GiaNhap" required>
+							<input type="text" class="form-control price-input" id="edit_GiaNhap" name="GiaNhap" required pattern="^[0-9.,]+$" title="Giá phải lớn hơn hoặc bằng 0">
 						</div>
 						<div class="form-group">
 							<label for="edit_GiaBan">Giá bán</label>
-							<input type="number" class="form-control" id="edit_GiaBan" name="GiaBan" required>
+							<input type="text" class="form-control price-input" id="edit_GiaBan" name="GiaBan" required pattern="^[0-9.,]+$" title="Giá phải lớn hơn hoặc bằng 0">
+							<div class="text-danger thong_bao_loi" style="font-size: 13px;"></div>
 						</div>
 						<div class="form-group">
 							<label for="edit_SoLuongConLai">Số lượng còn lại</label>
@@ -331,85 +331,183 @@
 @section Scripts {
 	<script>
 		$(document).ready(function () {
-			$('#viewProductModal').on('show.bs.modal', function (event) {
-				var button = $(event.relatedTarget);
-				var modal = $(this);
+		  // =============== ĐỊNH DẠNG TIỀN (gõ tới đâu format tới đó) ===============
+		  function formatPriceInput(inputElement) {
+			let value = (inputElement.value || '').replace(/[^0-9]/g, '');
+			inputElement.value = value ? parseInt(value, 10).toLocaleString('vi-VN') : '';
+		  }
 
-				// Lấy dữ liệu từ attribute data-*
-				modal.find('#detail_MaSanPham').text(button.attr('data-id'));
-				modal.find('#detail_TenSanPham').text(button.attr('data-tensanpham'));
-				modal.find('#detail_TenDanhMuc').text(button.attr('data-tendanhmuc'));
-				modal.find('#detail_GiaNhap').text(button.attr('data-gianhap'));
-				modal.find('#detail_GiaBan').text(button.attr('data-giaban'));
-				modal.find('#detail_SoLuong').text(button.attr('data-soluong'));
-				modal.find('#detail_NgayTao').text(button.attr('data-ngaytao'));
+		  // Gắn auto-format cho tất cả input có class .price-input
+		  $(document).on('input', '.price-input', function () {
+			formatPriceInput(this);
+			// kiểu mới không dùng is-invalid / setCustomValidity nữa
+			const loiDiv = this.nextElementSibling;
+			if (loiDiv && loiDiv.classList.contains('thong_bao_loi')) {
+			  loiDiv.textContent = ''; // clear lỗi ngay khi người dùng gõ lại
+			}
+		  });
 
-				// Xử lý hiển thị Tình trạng
-				var tinhTrang = button.attr('data-tinhtrang');
-				var tinhTrangBadge = modal.find('#detail_TinhTrang');
+		  // =============== HÀM DÙNG CHUNG ===============
+		  // Lấy số từ input: "1.234" / "1,234" -> 1234
+		  function getNumeric(el) {
+			return parseInt((el.value || '').replace(/[^0-9]/g, ''), 10);
+		  }
 
-				if (tinhTrang === 'True') {
-					tinhTrangBadge
-						.removeClass('badge-secondary')
-						.addClass('badge-success')
-						.text('Hiện');
-				} else {
-					tinhTrangBadge
-						.removeClass('badge-success')
-						.addClass('badge-secondary')
-						.text('Ẩn');
-				}
+		  // Set lỗi cho input (ghi text vào div ngay sau input)
+		  function setErrBelow(inputEl, message) {
+			const loiDiv = inputEl.nextElementSibling; // cần đảm bảo div lỗi nằm ngay sau input
+			if (loiDiv && loiDiv.classList.contains('thong_bao_loi')) {
+			  loiDiv.textContent = message || '';
+			}
+		  }
 
-				// Xử lý hiển thị hình ảnh
-				var hinhAnh = button.attr('data-hinhanh');
-				var moTa = button.attr('data-mota');
-				modal.find('#detail_HinhAnh').attr('src', '/KhachHang/images/AnhSP/' + hinhAnh);
-				modal.find('#detail_MoTa').attr('src', '/KhachHang/images/AnhMoTa/' + moTa);
+		  // Xoá lỗi cho một list input
+		  function clearErrs(inputs) {
+			inputs.forEach(function (el) {
+			  setErrBelow(el, '');
 			});
+		  }
 
+		  // Validate giới hạn trần (tuỳ bạn chỉnh)
+		  const MAX_PRICE = 1000000000; // 1,000,000,000
 
-			$('#editProductModal').on('show.bs.modal', function (event) {
-				var button = $(event.relatedTarget);
-				var modal = $(this);
+		  // =============== FORM THÊM ===============
+		  $('#addProductModal form').on('submit', function (e) {
+			// Lấy element gốc (DOM), không phải jQuery object
+			const giaNhapEl = document.getElementById('import_price');
+			const giaBanEl  = document.getElementById('price');
 
-				modal.find('#edit_MaSanPham').val(button.attr('data-id'));
-				modal.find('#edit_TenSanPham').val(button.attr('data-tensanpham'));
-				modal.find('#edit_MaDanhMuc').val(button.attr('data-madanhmuc'));
+			// Clear lỗi cũ
+			clearErrs([giaNhapEl, giaBanEl]);
 
-				// Giá nhập & giá bán (vẫn giữ format có dấu phẩy nếu có)
-				var giaNhap = button.attr('data-gianhap');
-				var giaBan = button.attr('data-giaban');
-				modal.find('#edit_GiaNhap').val(Number(giaNhap).toLocaleString('vi-VN'));
-				modal.find('#edit_GiaBan').val(Number(giaBan).toLocaleString('vi-VN'));
+			// Làm sạch về số để so sánh (không đổi giao diện người dùng)
+			const giaNhap = getNumeric(giaNhapEl);
+			const giaBan  = getNumeric(giaBanEl);
 
-				modal.find('#edit_SoLuongConLai').val(button.attr('data-soluongconlai'));
+			let hopLe = true;
 
-				// Xử lý tình trạng
-				var tinhTrang = button.attr('data-tinhtrang');
-				modal.find('#edit_TinhTrang').val(tinhTrang === 'True' ? 'True' : 'False');
+			// Các rule đơn giản như ví dụ
+			if (!isNaN(giaNhap) && giaNhap > MAX_PRICE) {
+			  setErrBelow(giaNhapEl, 'Giá nhập không vượt quá 1,000,000,000.');
+			  hopLe = false;
+			}
+			if (!isNaN(giaBan) && giaBan > MAX_PRICE) {
+			  setErrBelow(giaBanEl, 'Giá bán không vượt quá 1,000,000,000.');
+			  hopLe = false;
+			}
+			if (!isNaN(giaNhap) && !isNaN(giaBan) && giaBan < giaNhap) {
+			  setErrBelow(giaBanEl, 'Giá bán không được nhỏ hơn giá nhập.');
+			  hopLe = false;
+			}
 
-				// Hình ảnh & mô tả
-				var hinhAnh = button.attr('data-hinhanh');
-				var moTa = button.attr('data-mota');
-				modal.find('#edit_HinhAnh').attr('src', '/KhachHang/images/AnhSP/' + hinhAnh);
-				modal.find('#edit_MoTa').attr('src', '/KhachHang/images/AnhMoTa/' + moTa);
-			});
+			if (!hopLe) {
+			  e.preventDefault();
+			  return false;
+			}
 
-			$('#deleteProductModal').on('show.bs.modal', function (event) {
-				var button = $(event.relatedTarget);
-				var modal = $(this);
-				var id = button.attr('data-id');
-				modal.find('#delete_MaSanPham').val(id);
-			});
+			// ✅ Trước khi submit thật, convert về số sạch cho backend
+			// (giữ giao diện đẹp mắt tới phút cuối)
+			giaNhapEl.value = isNaN(giaNhap) ? '' : String(giaNhap);
+			giaBanEl.value  = isNaN(giaBan)  ? '' : String(giaBan);
 
-		});
-		$(document).ready(function() {
-			$(document).on('submit', '#editProductForm', function (e) {
-				var giaBanInput = $('#edit_GiaBan');
-				var giaNhapInput = $('#edit_GiaNhap');
-				giaBanInput.val(giaBanInput.val().replace(/\./g, '').trim());
-				giaNhapInput.val(giaNhapInput.val().replace(/\./g, '').trim());
-			});
+			return true;
+		  });
+
+		  // =============== FORM SỬA ===============
+		  $('#editProductModal form').on('submit', function (e) {
+			const giaNhapEl = document.getElementById('edit_GiaNhap');
+			const giaBanEl  = document.getElementById('edit_GiaBan');
+
+			clearErrs([giaNhapEl, giaBanEl]);
+
+			const giaNhap = getNumeric(giaNhapEl);
+			const giaBan  = getNumeric(giaBanEl);
+
+			let hopLe = true;
+
+			if (!isNaN(giaNhap) && giaNhap > MAX_PRICE) {
+			  setErrBelow(giaNhapEl, 'Giá nhập không vượt quá 1,000,000,000.');
+			  hopLe = false;
+			}
+			if (!isNaN(giaBan) && giaBan > MAX_PRICE) {
+			  setErrBelow(giaBanEl, 'Giá bán không vượt quá 1,000,000,000.');
+			  hopLe = false;
+			}
+			if (!isNaN(giaNhap) && !isNaN(giaBan) && giaBan < giaNhap) {
+			  setErrBelow(giaBanEl, 'Giá bán không được nhỏ hơn giá nhập.');
+			  hopLe = false;
+			}
+
+			if (!hopLe) {
+			  e.preventDefault(); // ❌ chặn submit
+			  return false;
+			}
+
+			// ✅ Trước khi submit thật, convert về số sạch cho backend
+			giaNhapEl.value = isNaN(giaNhap) ? '' : String(giaNhap);
+			giaBanEl.value  = isNaN(giaBan)  ? '' : String(giaBan);
+
+			return true;
+		  });
+
+		  $('#viewProductModal').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget);
+			var modal = $(this);
+
+			modal.find('#detail_MaSanPham').text(button.attr('data-id'));
+			modal.find('#detail_TenSanPham').text(button.attr('data-tensanpham'));
+			modal.find('#detail_TenDanhMuc').text(button.attr('data-tendanhmuc'));
+			modal.find('#detail_GiaNhap').text(button.attr('data-gianhap'));
+			modal.find('#detail_GiaBan').text(button.attr('data-giaban'));
+			modal.find('#detail_SoLuong').text(button.attr('data-soluong'));
+			modal.find('#detail_NgayTao').text(button.attr('data-ngaytao'));
+
+			var tinhTrang = button.attr('data-tinhtrang');
+			var tinhTrangBadge = modal.find('#detail_TinhTrang');
+
+			if (tinhTrang === 'True') {
+			  tinhTrangBadge.removeClass('badge-secondary').addClass('badge-success').text('Hiện');
+			} else {
+			  tinhTrangBadge.removeClass('badge-success').addClass('badge-secondary').text('Ẩn');
+			}
+
+			var hinhAnh = button.attr('data-hinhanh');
+			var moTa = button.attr('data-mota');
+			modal.find('#detail_HinhAnh').attr('src', '/KhachHang/images/AnhSP/' + hinhAnh);
+			modal.find('#detail_MoTa').attr('src', '/KhachHang/images/AnhMoTa/' + moTa);
+		  });
+
+		  $('#editProductModal').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget);
+			var modal = $(this);
+
+			modal.find('#edit_MaSanPham').val(button.attr('data-id'));
+			modal.find('#edit_TenSanPham').val(button.attr('data-tensanpham'));
+			modal.find('#edit_MaDanhMuc').val(button.attr('data-madanhmuc'));
+
+			var giaNhap = button.attr('data-gianhap');
+			var giaBan = button.attr('data-giaban');
+			modal.find('#edit_GiaNhap').val(Number(giaNhap).toLocaleString('vi-VN'));
+			modal.find('#edit_GiaBan').val(Number(giaBan).toLocaleString('vi-VN'));
+
+			modal.find('#edit_SoLuongConLai').val(button.attr('data-soluongconlai'));
+
+			var tinhTrang = button.attr('data-tinhtrang');
+			modal.find('#edit_TinhTrang').val(tinhTrang === 'True' ? 'True' : 'False');
+
+			var hinhAnh = button.attr('data-hinhanh');
+			var moTa = button.attr('data-mota');
+			modal.find('#edit_HinhAnh').attr('src', '/KhachHang/images/AnhSP/' + hinhAnh);
+			modal.find('#edit_MoTa').attr('src', '/KhachHang/images/AnhMoTa/' + moTa);
+		  });
+
+		  $('#deleteProductModal').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget);
+			var modal = $(this);
+			var id = button.attr('data-id');
+			modal.find('#delete_MaSanPham').val(id);
+		  });
+
 		});
 	</script>
 }

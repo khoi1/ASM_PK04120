@@ -29,7 +29,7 @@ namespace ASM_PK04120.Areas.Admin.Controllers
                 DoanhThuDanhMuc = _thongKeService.LayDoanhThuDanhMuc(),
                 SoLuongBanDanhMuc = _thongKeService.LaySoLuongBanDanhMuc(),
 
-                // Bảng chi tiết doanh thu theo ngày
+                // Bảng chi tiết doanh thu theo ngày, tháng, năm
                 DoanhThuNgays = _thongKeService.LayDoanhThuTheoNgay(),
                 DoanhThuThangs = _thongKeService.LayDoanhThuTheoThang(),
                 DoanhThuNams = _thongKeService.LayDoanhThuTheoNam()

@@ -31,7 +31,6 @@ namespace ASM_PK04120.Models
         [Required]
         public int SoLuongConLai { get; set; }
 
-        [Required]
         public DateTime NgayTao { get; set; }
 
         public bool TinhTrang { get; set; }

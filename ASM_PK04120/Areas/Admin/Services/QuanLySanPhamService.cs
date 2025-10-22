@@ -40,12 +40,6 @@ namespace ASM_PK04120.Areas.Admin.Services
                         case "Sắp hết hàng":
                             truyVan = truyVan.Where(p => p.SoLuongConLai > 0 && p.SoLuongConLai <= 10);
                             break;
-                        case "Tên từ a-z":
-                            truyVan = truyVan.OrderBy(p => p.TenSanPham);
-                            break;
-                        case "Tên từ z-a":
-                            truyVan = truyVan.OrderByDescending(p => p.TenSanPham);
-                            break;
                         default:
                             truyVan = truyVan.OrderByDescending(p => p.NgayTao);
                             break;
